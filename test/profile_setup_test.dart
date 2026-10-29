@@ -161,7 +161,7 @@ void main() {
     ProfileViewModel open({FakeProfileService? with_}) {
       service = with_ ?? FakeProfileService();
       return vm = Get.put<ProfileViewModel>(
-        ProfileViewModel(ProfileRepository(service), isSetup: true),
+        ProfileViewModel(ProfileRepository(service)),
       );
     }
 
@@ -332,40 +332,6 @@ void main() {
         'Nurse',
       ]);
       expect(service.profile?.role, 'Nurse');
-    });
-  });
-
-  group('Editing a profile', () {
-    setUp(() {
-      Get.testMode = true;
-    });
-
-    tearDown(() {
-      Get.reset();
-    });
-
-    test('is not set up from the sign-in', () async {
-      final FakeProfileService service = FakeProfileService(
-        profile: const UserProfile(
-          uid: 'uid-1',
-          name: 'Sana',
-          email: 'sana@example.com',
-          imageUrl: '',
-          bio: '',
-          age: 40,
-          gender: 'Female',
-          role: 'Doctor',
-        ),
-      );
-      final ProfileViewModel vm = Get.put<ProfileViewModel>(
-        ProfileViewModel(ProfileRepository(service)),
-      );
-      await pumpEventQueue();
-
-      expect(vm.isSetup, isFalse);
-      expect(vm.nameController.text, 'Sana');
-      expect(vm.ageController.text, '40');
-      expect(vm.profile.value?.role, 'Doctor');
     });
   });
 }

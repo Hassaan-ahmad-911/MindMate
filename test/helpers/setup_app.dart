@@ -43,9 +43,7 @@ class SetupTestApp {
             name: AppRoutes.createProfile,
             page: () => const ProfileAboutView(),
             binding: BindingsBuilder(() {
-              Get.put<ProfileViewModel>(
-                ProfileViewModel(profiles, isSetup: true),
-              );
+              Get.put<ProfileViewModel>(ProfileViewModel(profiles));
             }),
           ),
           GetPage(

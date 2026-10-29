@@ -12,7 +12,6 @@ class AppRoutes {
   /// email was never confirmed.
   static const String confirmEmail = '/confirm-email';
   static const String createProfile = '/create-profile';
-  static const String profile = '/profile';
   static const String profileWork = '/profile-setup/work';
   static const String checkInIntro = '/check-in';
   static const String checkInQuestion = '/check-in/question';

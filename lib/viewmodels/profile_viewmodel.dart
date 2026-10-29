@@ -12,23 +12,19 @@ import '../Models/user_profile.dart';
 import '../ui/app/app_routes.dart';
 import '../ui/shared/app_feedback.dart';
 
-/// The profile screens: editing a profile from Settings, and the two-step
-/// setup (About you, Your work) that follows sign-up. [isSetup] is true for the
-/// setup, where nothing is loaded and the sign-in fills in the name and photo.
+/// The two-step profile setup (About you, Your work) that follows sign-up.
+/// Nothing is loaded: the sign-in fills in the name and photo. Editing a
+/// profile later happens on Edit profile (`EditProfileViewModel`).
 class ProfileViewModel extends GetxController {
-  ProfileViewModel(this._repository, {this.isSetup = false});
+  ProfileViewModel(this._repository);
 
   final ProfileRepository _repository;
-  final bool isSetup;
 
   final Rxn<UserProfile> profile = Rxn<UserProfile>();
   final TextEditingController nameController = TextEditingController();
-  final TextEditingController bioController = TextEditingController();
   final TextEditingController ageController = TextEditingController();
   final RxnString selectedGender = RxnString();
-  final RxBool isLoading = false.obs;
   final RxBool isSaving = false.obs;
-  final RxBool isEditMode = true.obs;
   final Rxn<File> selectedImageFile = Rxn<File>();
 
   // Setup (About you, Your work).
@@ -41,27 +37,12 @@ class ProfileViewModel extends GetxController {
 
   final ImagePicker _picker = ImagePicker();
 
-  bool _fromSettings = false;
-  bool _initialEditMode = true;
-
-  static const List<String> genderOptions = <String>[
-    'Male',
-    'Female',
-    'Non-binary',
-    'Prefer not to say',
-  ];
-
   @override
   void onInit() {
     super.onInit();
-    _readArguments();
-    if (isSetup) {
-      nameController.addListener(() => nameText.value = nameController.text);
-      ageController.addListener(() => ageText.value = ageController.text);
-      _prefillFromSignIn();
-    } else {
-      unawaited(fetchProfile());
-    }
+    nameController.addListener(() => nameText.value = nameController.text);
+    ageController.addListener(() => ageText.value = ageController.text);
+    _prefillFromSignIn();
   }
 
   /// A new Google account already has a name and a photo: start from those.
@@ -154,68 +135,6 @@ class ProfileViewModel extends GetxController {
     Get.toNamed(AppRoutes.checkInIntro);
   }
 
-  void _readArguments() {
-    final Object? arguments = Get.arguments;
-    if (arguments is Map) {
-      final Object? origin = arguments['origin'];
-      _fromSettings = origin == 'settings';
-
-      final Object? editMode =
-          arguments['initialEditMode'] ?? arguments['editMode'];
-      if (editMode is bool) {
-        _initialEditMode = editMode;
-      }
-    }
-
-    isEditMode.value = _initialEditMode;
-  }
-
-  Future<void> fetchProfile() async {
-    isLoading.value = true;
-    try {
-      final UserProfile loadedProfile = await _repository
-          .getCurrentUserProfile();
-      profile.value = loadedProfile;
-      _populateFields(loadedProfile);
-    } on Object catch (error) {
-      showMindMateSnackBar('Profile load failed', _messageFor(error));
-    } finally {
-      isLoading.value = false;
-    }
-  }
-
-  void toggleEditMode() {
-    if (isEditMode.value) {
-      cancelEdit();
-      return;
-    }
-
-    isEditMode.value = true;
-  }
-
-  void cancelEdit() {
-    final UserProfile? currentProfile = profile.value;
-    if (currentProfile != null) {
-      _populateFields(currentProfile);
-    }
-    selectedImageFile.value = null;
-
-    if (_fromSettings || currentProfile?.createdAt != null) {
-      isEditMode.value = false;
-    } else {
-      isEditMode.value = true;
-    }
-  }
-
-  void selectGender(String? value) {
-    if (value == null || value.trim().isEmpty) {
-      selectedGender.value = null;
-      return;
-    }
-
-    selectedGender.value = value.trim();
-  }
-
   Future<void> pickImage() async {
     final XFile? pickedImage = await _picker.pickImage(
       source: ImageSource.gallery,
@@ -229,93 +148,11 @@ class ProfileViewModel extends GetxController {
     selectedImageFile.value = File(pickedImage.path);
   }
 
-  Future<void> updateProfile() async {
-    if (isSaving.value) {
-      return;
-    }
-
-    final String trimmedName = nameController.text.trim();
-    final String trimmedBio = bioController.text.trim();
-    final String? gender = selectedGender.value;
-
-    final String? nameError = ProfileValidation.nameError(trimmedName);
-    if (nameError != null) {
-      showMindMateSnackBar('Name required', nameError);
-      return;
-    }
-
-    if (gender == null || gender.isEmpty) {
-      showMindMateSnackBar('Gender required', 'Please select a gender.');
-      return;
-    }
-
-    final String? ageError = ProfileValidation.ageError(ageController.text);
-    if (ageError != null) {
-      showMindMateSnackBar('Invalid age', ageError);
-      return;
-    }
-    final int? age = ProfileValidation.parseAge(ageController.text);
-
-    final UserProfile currentProfile =
-        profile.value ??
-        UserProfile(
-          uid: '',
-          name: '',
-          email: '',
-          imageUrl: '',
-          bio: '',
-          age: null,
-          gender: '',
-        );
-
-    final UserProfile draftProfile = UserProfile(
-      uid: currentProfile.uid,
-      name: trimmedName,
-      email: currentProfile.email,
-      imageUrl: currentProfile.imageUrl,
-      bio: trimmedBio,
-      age: age,
-      gender: gender,
-      createdAt: currentProfile.createdAt,
-      updatedAt: DateTime.now(),
-    );
-
-    isSaving.value = true;
-    try {
-      final UserProfile savedProfile = await _repository.updateUserProfile(
-        draftProfile,
-        imageFile: selectedImageFile.value,
-      );
-
-      profile.value = savedProfile;
-      _populateFields(savedProfile);
-      selectedImageFile.value = null;
-      isEditMode.value = false;
-
-      showMindMateSnackBar(
-        'Profile updated',
-        'Your profile was saved successfully.',
-      );
-
-      if (_fromSettings) {
-        Get.back(result: true);
-      } else {
-        Get.offAllNamed(AppRoutes.home);
-      }
-    } on FirebaseException catch (error) {
-      showMindMateSnackBar('Profile update failed', _messageFor(error));
-    } catch (error) {
-      showMindMateSnackBar('Profile update failed', _messageFor(error));
-    } finally {
-      isSaving.value = false;
-    }
-  }
-
   String _messageFor(Object error) {
     if (error is FirebaseException) {
       switch (error.code) {
         case 'permission-denied':
-          return 'You do not have permission to update this profile.';
+          return 'You do not have permission to save this profile.';
         case 'unauthenticated':
         case 'no-current-user':
           return 'Please sign in again to continue.';
@@ -333,19 +170,9 @@ class ProfileViewModel extends GetxController {
     return 'Please try again.';
   }
 
-  void _populateFields(UserProfile userProfile) {
-    nameController.text = userProfile.name;
-    bioController.text = userProfile.bio;
-    ageController.text = userProfile.age?.toString() ?? '';
-    selectedGender.value = userProfile.gender.trim().isNotEmpty
-        ? userProfile.gender.trim()
-        : null;
-  }
-
   @override
   void onClose() {
     nameController.dispose();
-    bioController.dispose();
     ageController.dispose();
     departmentController.dispose();
     selectedImageFile.value = null;

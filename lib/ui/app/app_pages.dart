@@ -112,7 +112,6 @@ import '../splash/splash_view.dart';
 import '../splash/splash_viewmodel.dart';
 
 import '../../viewmodels/profile_viewmodel.dart';
-import '../../views/create_profile_screen.dart';
 import 'app_routes.dart';
 
 class AppPages {
@@ -209,7 +208,7 @@ class AppPages {
       page: () => const ProfileAboutView(),
       binding: BindingsBuilder(() {
         Get.put<ProfileViewModel>(
-          ProfileViewModel(Get.find<ProfileRepository>(), isSetup: true),
+          ProfileViewModel(Get.find<ProfileRepository>()),
         );
       }),
     ),
@@ -236,15 +235,6 @@ class AppPages {
       page: () => const CheckInQuestionView(),
     ),
     GetPage(name: AppRoutes.checkInDone, page: () => const CheckInDoneView()),
-    GetPage(
-      name: AppRoutes.profile,
-      page: () => const CreateProfileScreen(),
-      binding: BindingsBuilder(() {
-        Get.put<ProfileViewModel>(
-          ProfileViewModel(Get.find<ProfileRepository>()),
-        );
-      }),
-    ),
     GetPage(
       name: AppRoutes.aiChat,
       page: () => const AiChatView(),

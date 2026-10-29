@@ -340,17 +340,8 @@ class HomeViewModel extends GetxController {
 
   void logMood() => unawaited(open(AppRoutes.moodLog));
 
-  void openProfile() {
-    unawaited(
-      open(
-        AppRoutes.profile,
-        arguments: <String, dynamic>{
-          'origin': 'home',
-          'initialEditMode': false,
-        },
-      ),
-    );
-  }
+  /// The photo opens the same Edit profile screen as Settings.
+  void openProfile() => unawaited(open(AppRoutes.settingsProfile));
 
   void openSupport() => unawaited(open(AppRoutes.support));
 

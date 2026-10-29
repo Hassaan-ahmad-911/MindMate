@@ -124,7 +124,7 @@ Future<HomeSetup> open(
           AppRoutes.assessments,
           AppRoutes.games,
           AppRoutes.support,
-          AppRoutes.profile,
+          AppRoutes.settingsProfile,
           AppRoutes.checkInIntro,
           AppRoutes.reports,
           AppRoutes.emotionCheck,
@@ -433,7 +433,7 @@ void main() {
       await tester.tap(find.text('AK'));
       await go(tester);
 
-      expect(Get.currentRoute, AppRoutes.profile);
+      expect(Get.currentRoute, AppRoutes.settingsProfile);
     });
 
     testWidgets('the bell has no dot until something is unread', (
