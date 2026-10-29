@@ -1,0 +1,352 @@
+{
+  "version": 1,
+  "notes": "Content for MindMate check-ins. Load from assets/assessments/assessments_content.json. Question wording for PHQ-9, GAD-7, PSS-10, WHO-5 and CBI is the published wording and must not be shortened or reworded. The workplace questionnaire's items stay as they are in the app today and are moved into this file by the coding model. heavyBands lists the ranges whose pill uses the blue blend with white text.",
+
+  "answerSets": {
+    "phq_freq": [
+      { "label": "Not at all", "value": 0 },
+      { "label": "Several days", "value": 1 },
+      { "label": "More than half the days", "value": 2 },
+      { "label": "Nearly every day", "value": 3 }
+    ],
+    "phq_difficulty": [
+      { "label": "Not difficult at all", "value": 0 },
+      { "label": "Somewhat difficult", "value": 1 },
+      { "label": "Very difficult", "value": 2 },
+      { "label": "Extremely difficult", "value": 3 }
+    ],
+    "pss_freq": [
+      { "label": "Never", "value": 0 },
+      { "label": "Almost never", "value": 1 },
+      { "label": "Sometimes", "value": 2 },
+      { "label": "Fairly often", "value": 3 },
+      { "label": "Very often", "value": 4 }
+    ],
+    "who5": [
+      { "label": "All of the time", "value": 5 },
+      { "label": "Most of the time", "value": 4 },
+      { "label": "More than half of the time", "value": 3 },
+      { "label": "Less than half of the time", "value": 2 },
+      { "label": "Some of the time", "value": 1 },
+      { "label": "At no time", "value": 0 }
+    ],
+    "cbi_freq": [
+      { "label": "Always", "value": 100 },
+      { "label": "Often", "value": 75 },
+      { "label": "Sometimes", "value": 50 },
+      { "label": "Seldom", "value": 25 },
+      { "label": "Never or almost never", "value": 0 }
+    ],
+    "cbi_degree": [
+      { "label": "To a very high degree", "value": 100 },
+      { "label": "To a high degree", "value": 75 },
+      { "label": "Somewhat", "value": 50 },
+      { "label": "To a low degree", "value": 25 },
+      { "label": "To a very low degree", "value": 0 }
+    ],
+    "agree5": [
+      { "label": "Strongly Agree", "value": 5 },
+      { "label": "Agree", "value": 4 },
+      { "label": "Neutral", "value": 3 },
+      { "label": "Disagree", "value": 2 },
+      { "label": "Strongly Disagree", "value": 1 }
+    ]
+  },
+
+  "assessments": [
+    {
+      "id": "phq9",
+      "name": "Low mood",
+      "scale": "PHQ-9",
+      "group": "mood",
+      "icon": "cloud",
+      "minutes": 2,
+      "retakeDays": 14,
+      "lowerIsBetter": true,
+      "intro": "Think about the last 2 weeks.",
+      "about": "A widely used screening questionnaire. It cannot diagnose anything, but it can show when talking to a doctor might help.",
+      "stem": "Over the last 2 weeks, how often have you been bothered by any of the following problems?",
+      "answerSet": "phq_freq",
+      "items": [
+        { "n": 1, "text": "Little interest or pleasure in doing things" },
+        { "n": 2, "text": "Feeling down, depressed, or hopeless" },
+        { "n": 3, "text": "Trouble falling or staying asleep, or sleeping too much" },
+        { "n": 4, "text": "Feeling tired or having little energy" },
+        { "n": 5, "text": "Poor appetite or overeating" },
+        { "n": 6, "text": "Feeling bad about yourself, or that you are a failure or have let yourself or your family down" },
+        { "n": 7, "text": "Trouble concentrating on things, such as reading the newspaper or watching television" },
+        { "n": 8, "text": "Moving or speaking so slowly that other people could have noticed. Or the opposite: being so fidgety or restless that you have been moving around a lot more than usual" },
+        { "n": 9, "text": "Thoughts that you would be better off dead, or of hurting yourself in some way", "safety": true }
+      ],
+      "extraItem": {
+        "id": "difficulty",
+        "showIfAnyAbove": 0,
+        "text": "If you had any of these problems, how difficult have they made it for you to do your work, take care of things at home, or get along with other people?",
+        "answerSet": "phq_difficulty",
+        "scored": false
+      },
+      "scoring": { "method": "sum", "max": 27 },
+      "bands": [
+        { "id": "minimal", "label": "Minimal", "min": 0, "max": 4, "line": "Few signs of low mood right now." },
+        { "id": "mild", "label": "Mild", "min": 5, "max": 9, "line": "Some signs of low mood. Keep an eye on how the next few weeks go." },
+        { "id": "moderate", "label": "Moderate", "min": 10, "max": 14, "line": "Low mood may be getting in the way of daily life." },
+        { "id": "moderately_severe", "label": "Moderately severe", "min": 15, "max": 19, "line": "Low mood seems to be affecting a lot of your days." },
+        { "id": "severe", "label": "Severe", "min": 20, "max": 27, "line": "Low mood seems to be affecting most of your days." }
+      ],
+      "heavyBands": ["moderately_severe", "severe"],
+      "nextSteps": [
+        { "from": 20, "text": "Please talk with a doctor or counsellor soon. You do not have to wait until things get worse." },
+        { "from": 10, "text": "A score of 10 or more is a good reason to talk with a doctor or counsellor." }
+      ],
+      "practice": { "from": 10, "id": "self_compassion_break" }
+    },
+    {
+      "id": "gad7",
+      "name": "Worry and anxiety",
+      "scale": "GAD-7",
+      "group": "mood",
+      "icon": "waves",
+      "minutes": 2,
+      "retakeDays": 14,
+      "lowerIsBetter": true,
+      "intro": "Think about the last 2 weeks.",
+      "about": "A widely used screening questionnaire for worry and anxiety. It cannot diagnose anything.",
+      "stem": "Over the last 2 weeks, how often have you been bothered by the following problems?",
+      "answerSet": "phq_freq",
+      "items": [
+        { "n": 1, "text": "Feeling nervous, anxious, or on edge" },
+        { "n": 2, "text": "Not being able to stop or control worrying" },
+        { "n": 3, "text": "Worrying too much about different things" },
+        { "n": 4, "text": "Trouble relaxing" },
+        { "n": 5, "text": "Being so restless that it is hard to sit still" },
+        { "n": 6, "text": "Becoming easily annoyed or irritable" },
+        { "n": 7, "text": "Feeling afraid, as if something awful might happen" }
+      ],
+      "scoring": { "method": "sum", "max": 21 },
+      "bands": [
+        { "id": "minimal", "label": "Minimal", "min": 0, "max": 4, "line": "Few signs of anxiety right now." },
+        { "id": "mild", "label": "Mild", "min": 5, "max": 9, "line": "Some worry, but it may not be getting in the way much." },
+        { "id": "moderate", "label": "Moderate", "min": 10, "max": 14, "line": "Worry may be getting in the way of daily life." },
+        { "id": "severe", "label": "Severe", "min": 15, "max": 21, "line": "Worry seems to be affecting most of your days." }
+      ],
+      "heavyBands": ["moderate", "severe"],
+      "nextSteps": [
+        { "from": 15, "text": "Please talk with a doctor or counsellor soon." },
+        { "from": 10, "text": "A score of 10 or more is a good reason to talk with a doctor or counsellor." }
+      ],
+      "practice": { "from": 5, "id": "senses_54321" }
+    },
+    {
+      "id": "cbi",
+      "name": "Burnout",
+      "scale": "CBI",
+      "group": "work",
+      "icon": "battery",
+      "minutes": 4,
+      "retakeDays": 30,
+      "lowerIsBetter": true,
+      "intro": "Think about how things are for you these days.",
+      "about": "The Copenhagen Burnout Inventory looks at tiredness and exhaustion in three areas of life. It is not a diagnosis.",
+      "stem": null,
+      "items": [
+        { "n": 1, "area": "personal", "answerSet": "cbi_freq", "text": "How often do you feel tired?" },
+        { "n": 2, "area": "personal", "answerSet": "cbi_freq", "text": "How often are you physically exhausted?" },
+        { "n": 3, "area": "personal", "answerSet": "cbi_freq", "text": "How often are you emotionally exhausted?" },
+        { "n": 4, "area": "personal", "answerSet": "cbi_freq", "text": "How often do you think: \"I can't take it anymore\"?" },
+        { "n": 5, "area": "personal", "answerSet": "cbi_freq", "text": "How often do you feel worn out?" },
+        { "n": 6, "area": "personal", "answerSet": "cbi_freq", "text": "How often do you feel weak and susceptible to illness?" },
+        { "n": 7, "area": "work", "answerSet": "cbi_degree", "text": "Is your work emotionally exhausting?" },
+        { "n": 8, "area": "work", "answerSet": "cbi_degree", "text": "Do you feel burnt out because of your work?" },
+        { "n": 9, "area": "work", "answerSet": "cbi_degree", "text": "Does your work frustrate you?" },
+        { "n": 10, "area": "work", "answerSet": "cbi_freq", "text": "Do you feel worn out at the end of the working day?" },
+        { "n": 11, "area": "work", "answerSet": "cbi_freq", "text": "Are you exhausted in the morning at the thought of another day at work?" },
+        { "n": 12, "area": "work", "answerSet": "cbi_freq", "text": "Do you feel that every working hour is tiring for you?" },
+        { "n": 13, "area": "work", "answerSet": "cbi_freq", "text": "Do you have enough energy for family and friends during leisure time?", "reverse": true },
+        { "n": 14, "area": "patients", "answerSet": "cbi_degree", "text": "Do you find it hard to work with patients?" },
+        { "n": 15, "area": "patients", "answerSet": "cbi_degree", "text": "Do you find it frustrating to work with patients?" },
+        { "n": 16, "area": "patients", "answerSet": "cbi_degree", "text": "Does it drain your energy to work with patients?" },
+        { "n": 17, "area": "patients", "answerSet": "cbi_degree", "text": "Do you feel that you give more than you get back when you work with patients?" },
+        { "n": 18, "area": "patients", "answerSet": "cbi_freq", "text": "Are you tired of working with patients?" },
+        { "n": 19, "area": "patients", "answerSet": "cbi_freq", "text": "Do you sometimes wonder how long you will be able to continue working with patients?" }
+      ],
+      "scoring": {
+        "method": "areaMean",
+        "max": 100,
+        "reverse": "100 minus the answer value",
+        "noTotal": true,
+        "areas": [
+          { "id": "work", "label": "Work", "sub": "Tiredness linked to your job" },
+          { "id": "personal", "label": "Personal", "sub": "Tiredness in general" },
+          { "id": "patients", "label": "Patients", "sub": "Tiredness from working with patients" }
+        ]
+      },
+      "bands": [
+        { "id": "low", "label": "Low", "min": 0, "max": 49.99 },
+        { "id": "moderate", "label": "Moderate", "min": 50, "max": 74.99 },
+        { "id": "high", "label": "High", "min": 75, "max": 99.99 },
+        { "id": "severe", "label": "Severe", "min": 100, "max": 100 }
+      ],
+      "heavyBands": ["high", "severe"],
+      "bandsNote": "Lines mark 50 and 75. These are common guides, not official cut-offs. The CBI has no overall score.",
+      "topLines": {
+        "work": "Work is where you feel most drained right now.",
+        "personal": "General tiredness is the biggest area right now.",
+        "patients": "Working with patients is where you feel most drained right now.",
+        "allLow": "All three areas are in the low range right now."
+      },
+      "nextSteps": [
+        { "anyAreaFrom": 75, "text": "High burnout scores are a good reason to talk with your manager, occupational health, or a counsellor." }
+      ],
+      "practice": { "anyAreaFrom": 50, "id": "leaving_work" }
+    },
+    {
+      "id": "pss10",
+      "name": "Stress",
+      "scale": "PSS-10",
+      "group": "work",
+      "icon": "pulse",
+      "minutes": 2,
+      "retakeDays": 30,
+      "lowerIsBetter": true,
+      "intro": "Think about the last month.",
+      "about": "The Perceived Stress Scale looks at how unpredictable and overloaded life has felt. It is not a diagnosis.",
+      "stem": "In the last month, how often have you:",
+      "answerSet": "pss_freq",
+      "items": [
+        { "n": 1, "text": "been upset because of something that happened unexpectedly?" },
+        { "n": 2, "text": "felt that you were unable to control the important things in your life?" },
+        { "n": 3, "text": "felt nervous and \"stressed\"?" },
+        { "n": 4, "text": "felt confident about your ability to handle your personal problems?", "reverse": true },
+        { "n": 5, "text": "felt that things were going your way?", "reverse": true },
+        { "n": 6, "text": "found that you could not cope with all the things that you had to do?" },
+        { "n": 7, "text": "been able to control irritations in your life?", "reverse": true },
+        { "n": 8, "text": "felt that you were on top of things?", "reverse": true },
+        { "n": 9, "text": "been angered because of things that happened that were outside of your control?" },
+        { "n": 10, "text": "felt difficulties were piling up so high that you could not overcome them?" }
+      ],
+      "scoring": { "method": "sum", "max": 40, "reverse": "4 minus the answer value" },
+      "bands": [
+        { "id": "low", "label": "Low", "min": 0, "max": 13, "line": "Your stress looks low compared with common guides." },
+        { "id": "moderate", "label": "Moderate", "min": 14, "max": 26, "line": "Your stress looks moderate compared with common guides." },
+        { "id": "high", "label": "High", "min": 27, "max": 40, "line": "Your stress looks high compared with common guides." }
+      ],
+      "heavyBands": ["high"],
+      "bandsNote": "These ranges are common guides, not official cut-offs.",
+      "nextSteps": [
+        { "from": 27, "text": "High stress for a long time is worth talking about with someone you trust, or a doctor or counsellor." }
+      ],
+      "practice": { "from": 14, "id": "three_step_pause" }
+    },
+    {
+      "id": "who5",
+      "name": "Wellbeing",
+      "scale": "WHO-5",
+      "group": "wellbeing",
+      "icon": "sun",
+      "minutes": 1,
+      "retakeDays": 14,
+      "lowerIsBetter": false,
+      "intro": "Think about the last 2 weeks.",
+      "about": "The WHO-5 Well-Being Index looks at positive wellbeing. Higher is better. It is not a diagnosis.",
+      "stem": "Over the last two weeks:",
+      "answerSet": "who5",
+      "items": [
+        { "n": 1, "text": "I have felt cheerful and in good spirits" },
+        { "n": 2, "text": "I have felt calm and relaxed" },
+        { "n": 3, "text": "I have felt active and vigorous" },
+        { "n": 4, "text": "I woke up feeling fresh and rested" },
+        { "n": 5, "text": "My daily life has been filled with things that interest me" }
+      ],
+      "scoring": { "method": "sumTimes4", "rawMax": 25, "max": 100 },
+      "bands": [
+        { "id": "very_low", "label": "Very low", "min": 0, "max": 28, "line": "Your wellbeing looks very low right now." },
+        { "id": "low", "label": "Low", "min": 29, "max": 50, "line": "Your wellbeing looks lower than usual." },
+        { "id": "good", "label": "Good", "min": 51, "max": 100, "line": "Your wellbeing looks good." }
+      ],
+      "heavyBands": ["very_low"],
+      "bandsNote": "A score of 50 or below suggests low wellbeing that is worth talking about.",
+      "nextSteps": [
+        { "upTo": 28, "text": "Please consider talking with a doctor or counsellor soon." },
+        { "upTo": 50, "text": "A score of 50 or below is a good reason to talk with a doctor or counsellor." }
+      ],
+      "practice": { "upTo": 50, "id": "kindness_for_carers" }
+    },
+    {
+      "id": "workplace",
+      "name": "Your workplace",
+      "scale": "MindMate",
+      "group": "work",
+      "icon": "building",
+      "minutes": 3,
+      "retakeDays": 30,
+      "lowerIsBetter": false,
+      "intro": "Think about your workplace these days.",
+      "about": "A MindMate questionnaire about your work environment. It is not a validated clinical scale and it is not a diagnosis.",
+      "stem": null,
+      "answerSet": "agree5",
+      "items": [
+        { "n": 1, "area": "workload", "text": "I can manage the number of patients I am responsible for during my working hours." },
+        { "n": 2, "area": "workload", "text": "My workload is reasonable for the time available to complete my duties." },
+        { "n": 3, "area": "workload", "text": "I have enough time to provide proper care and attention to my patients." },
+        { "n": 4, "area": "workload", "text": "Staff shortages significantly increase my workload.", "reverse": true },
+        { "n": 5, "area": "shifts", "text": "My working hours and shift schedule are manageable for me." },
+        { "n": 6, "area": "shifts", "text": "I am able to take adequate breaks during my shifts." },
+        { "n": 7, "area": "shifts", "text": "My work schedule allows me enough time for sleep and recovery." },
+        { "n": 8, "area": "emotional", "text": "Dealing with seriously ill patients or patient deaths affects my emotional well-being.", "reverse": true },
+        { "n": 9, "area": "emotional", "text": "Difficult or aggressive patients or their relatives create significant stress for me.", "reverse": true },
+        { "n": 10, "area": "emotional", "text": "I receive adequate support when I experience an emotionally difficult situation at work." },
+        { "n": 11, "area": "team", "text": "I feel supported by my colleagues when my workload becomes stressful." },
+        { "n": 12, "area": "team", "text": "I feel comfortable asking for help when I feel overwhelmed at work." },
+        { "n": 13, "area": "team", "text": "My supervisor or management understands the challenges faced by medical staff." },
+        { "n": 14, "area": "resources", "text": "I have the equipment, resources, and support needed to perform my duties properly." },
+        { "n": 15, "area": "resources", "text": "My workplace takes the mental well-being of medical staff seriously." }
+      ],
+      "scoring": {
+        "method": "areaPercent",
+        "max": 100,
+        "formula": "percent = (sum - itemCount * minValue) / (itemCount * (maxValue - minValue)) * 100, after reversing (minValue + maxValue - answer); the same formula for each area (using that area's own item count) and for the overall score",
+        "areas": [
+          { "id": "workload", "label": "Workload and patient care", "sub": "Patients, time and staffing" },
+          { "id": "shifts", "label": "Shifts and recovery", "sub": "Hours, breaks and rest" },
+          { "id": "emotional", "label": "Emotional pressure", "sub": "Hard moments and support after them" },
+          { "id": "team", "label": "Team and management", "sub": "Colleagues and the people you report to" },
+          { "id": "resources", "label": "Workplace and resources", "sub": "Equipment and how staff wellbeing is valued" }
+        ]
+      },
+      "bands": [
+        { "id": "needs_significant_attention", "label": "Needs Significant Attention", "min": 0, "max": 39.99 },
+        { "id": "needs_attention", "label": "Needs Attention", "min": 40, "max": 59.99 },
+        { "id": "positive", "label": "Positive Workplace Well-Being", "min": 60, "max": 79.99 },
+        { "id": "very_positive", "label": "Very Positive Workplace Well-Being", "min": 80, "max": 100 }
+      ],
+      "heavyBands": [],
+      "bandsNote": "Higher is healthier. Lines mark 40, 60 and 80.",
+      "nextSteps": [],
+      "practice": null
+    }
+  ],
+
+  "hubGroups": [
+    { "id": "mood", "label": "Mood and worry" },
+    { "id": "work", "label": "Work and stress" },
+    { "id": "wellbeing", "label": "Wellbeing" }
+  ],
+  "suggestOrder": ["cbi", "phq9", "who5", "gad7", "pss10", "workplace"],
+
+  "safety": {
+    "item9": {
+      "title": "Thank you for telling us",
+      "body": "You said you have had thoughts of being better off dead or of hurting yourself. That is hard to share. You do not have to carry this alone.",
+      "talk": { "title": "Talk to someone now", "sub": "Helplines you can call or message" },
+      "trust": { "title": "Reach out to someone you trust", "sub": "A friend, family member or colleague" },
+      "trustMessage": "Hi, are you free to talk today?",
+      "footnote": "If you might act on these thoughts, call your local emergency number now. MindMate is not an emergency service and will not contact anyone for you.",
+      "continue": "I'm safe, continue",
+      "stop": "Stop the check here",
+      "resultCard": "You told us about thoughts of hurting yourself. Please talk to someone today.",
+      "hubBanner": "Support is here whenever you need it."
+    }
+  },
+
+  "disclaimer": "These are screening questionnaires. They cannot diagnose anything, but they can help you notice changes and decide when to talk to someone."
+}

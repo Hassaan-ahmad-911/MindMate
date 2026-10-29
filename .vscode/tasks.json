@@ -1,0 +1,32 @@
+﻿{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Phone USB: forward AI chat server",
+      "detail": "Lets the USB-connected phone reach the AI chat server on this computer as localhost:8001.",
+      "type": "process",
+      "command": "${env:LOCALAPPDATA}\\Android\\Sdk\\platform-tools\\adb.exe",
+      "args": ["reverse", "tcp:8001", "tcp:8001"],
+      "presentation": { "reveal": "silent" },
+      "problemMatcher": []
+    },
+    {
+      "label": "Phone USB: forward code server",
+      "detail": "Lets the USB-connected phone reach the code server on this computer as localhost:8080 (testing only).",
+      "type": "process",
+      "command": "${env:LOCALAPPDATA}\\Android\\Sdk\\platform-tools\\adb.exe",
+      "args": ["reverse", "tcp:8080", "tcp:8080"],
+      "presentation": { "reveal": "silent" },
+      "problemMatcher": []
+    },
+    {
+      "label": "Phone USB: forward both servers",
+      "dependsOn": [
+        "Phone USB: forward AI chat server",
+        "Phone USB: forward code server"
+      ],
+      "dependsOrder": "sequence",
+      "problemMatcher": []
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "MindMate",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart",
+      "preLaunchTask": "Phone USB: forward AI chat server"
+    },
+    {
+      "name": "MindMate (testing: local code server, phone by USB)",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart",
+      "preLaunchTask": "Phone USB: forward both servers",
+      "args": ["--dart-define=OTP_BASE_URL=http://localhost:8080"]
+    }
+  ]
+}

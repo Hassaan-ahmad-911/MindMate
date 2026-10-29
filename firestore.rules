@@ -1,0 +1,77 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    // The email is confirmed: always for Google, and for email accounts once
+    // the emailed code was entered. Unconfirmed accounts reach no user data,
+    // so the code check cannot be skipped by calling Firebase directly.
+    function verified() {
+      return request.auth != null && request.auth.token.email_verified == true;
+    }
+
+    match /users/{userId} {
+      // Owner-only. This also lets the app set `journalsMigratedAt` once the
+      // old journal entries have been moved.
+      allow create, read, update, delete: if isOwner(userId) && verified();
+
+      match /moods/{moodId} {
+        allow create, read, update, delete: if isOwner(userId) && verified();
+      }
+
+      match /meditation_sessions/{sessionId} {
+        allow create, read, update, delete: if isOwner(userId) && verified();
+      }
+
+      match /checkins/{checkInId} {
+        allow create, read, update, delete: if isOwner(userId) && verified();
+      }
+
+      match /gratitude/{entryId} {
+        allow create, read, update, delete: if isOwner(userId) && verified();
+      }
+
+      match /breaks/{breakId} {
+        allow create, read, update, delete: if isOwner(userId) && verified();
+      }
+
+      match /journals/{entryId} {
+        allow create, read, update, delete: if isOwner(userId) && verified();
+      }
+
+      match /assessments/{resultId} {
+        allow create, read, update, delete: if isOwner(userId) && verified();
+      }
+
+      // Drafts are kept on the phone today; this lets account deletion
+      // check the collection (and clear it if it is ever used).
+      match /journal_drafts/{draftId} {
+        allow create, read, update, delete: if isOwner(userId) && verified();
+      }
+    }
+
+    // The old top-level journal collection. Kept only so the app can read
+    // and delete old entries while moving them to users/{uid}/journals.
+    // Remove this rule once everyone has migrated.
+    match /journals/{journalId} {
+      allow create: if isSignedIn() && verified()
+        && request.resource.data.userId == request.auth.uid;
+
+      allow read, update, delete: if isSignedIn() && verified()
+        && request.auth.uid == resource.data.userId;
+    }
+
+    // Pending sign-up codes. Only the email-code server (Admin SDK, which
+    // skips these rules) may use them; the app never can.
+    match /email_otp/{doc} {
+      allow read, write: if false;
+    }
+  }
+}

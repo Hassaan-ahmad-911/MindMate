@@ -1,0 +1,29 @@
+{
+  "firestore": {
+    "rules": "firestore.rules"
+  },
+  "storage": {
+    "rules": "storage.rules"
+  },
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "mindmate-86a21",
+          "appId": "1:203338340444:android:1a46a3507c212f98e62e99",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "mindmate-86a21",
+          "configurations": {
+            "android": "1:203338340444:android:1a46a3507c212f98e62e99",
+            "ios": "1:203338340444:ios:cb2d7a91088c79b8e62e99",
+            "web": "1:203338340444:web:ecea1e5c23432c80e62e99"
+          }
+        }
+      }
+    }
+  }
+}

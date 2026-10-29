@@ -1,0 +1,26 @@
+rules_version = '2';
+
+service firebase.storage {
+  match /b/{bucket}/o {
+    // The email is confirmed (Google, or the emailed code was entered).
+    function verified() {
+      return request.auth != null && request.auth.token.email_verified == true;
+    }
+
+    // Profile photos: profile_images/{uid}.jpg, only the owner, only images
+    // under 5 MB.
+    match /profile_images/{fileName} {
+      allow read, delete: if verified()
+        && fileName == request.auth.uid + '.jpg';
+      allow create, update: if verified()
+        && fileName == request.auth.uid + '.jpg'
+        && request.resource.size < 5 * 1024 * 1024
+        && request.resource.contentType.matches('image/.*');
+    }
+
+    // Nothing else.
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}

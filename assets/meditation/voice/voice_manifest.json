@@ -1,0 +1,823 @@
+{
+  "voice": "kokoro-af_heart",
+  "speakingRate": 0.85,
+  "sampleRate": 24000,
+  "sessions": {
+    "arriving": [
+      {
+        "index": 0,
+        "file": "arriving_00.mp3",
+        "text": "Stand or sit where you are. Let your shoulders drop. Keep your eyes open if you prefer.",
+        "durationMs": 7804
+      },
+      {
+        "index": 1,
+        "file": "arriving_01.mp3",
+        "text": "Feel both feet on the floor. Notice the weight of your body being held up by the ground.",
+        "durationMs": 6691
+      },
+      {
+        "index": 2,
+        "file": "arriving_02.mp3",
+        "text": "Take three slow breaths. In through the nose, and out a little longer than you breathed in.",
+        "durationMs": 7011
+      },
+      {
+        "index": 3,
+        "file": "arriving_03.mp3",
+        "text": "Ask yourself one question. What matters most to me in this shift? Let one word or phrase come.",
+        "durationMs": 8081
+      },
+      {
+        "index": 4,
+        "file": "arriving_04.mp3",
+        "text": "Hold that word for a moment. You have arrived. Begin when you are ready.",
+        "durationMs": 6972
+      }
+    ],
+    "three_step_pause": [
+      {
+        "index": 0,
+        "file": "three_step_pause_00.mp3",
+        "text": "Pause what you are doing. Sit or stand upright, in a way that feels steady.",
+        "durationMs": 6179
+      },
+      {
+        "index": 1,
+        "file": "three_step_pause_01.mp3",
+        "text": "Step one. Notice what is here right now. What thoughts are passing through? Just name them, without arguing with them.",
+        "durationMs": 10239
+      },
+      {
+        "index": 2,
+        "file": "three_step_pause_02.mp3",
+        "text": "What feelings are here? What do you notice in your body? Let it all be as it is for now.",
+        "durationMs": 7399
+      },
+      {
+        "index": 3,
+        "file": "three_step_pause_03.mp3",
+        "text": "Step two. Bring your attention to your breathing. Follow each breath in, and each breath out, all the way through.",
+        "durationMs": 9063
+      },
+      {
+        "index": 4,
+        "file": "three_step_pause_04.mp3",
+        "text": "Step three. Widen your attention to your whole body. Feel yourself breathing, sitting or standing, as one whole person.",
+        "durationMs": 10001
+      },
+      {
+        "index": 5,
+        "file": "three_step_pause_05.mp3",
+        "text": "Carry this wider attention into whatever comes next.",
+        "durationMs": 4277
+      }
+    ],
+    "mindful_hand_washing": [
+      {
+        "index": 0,
+        "file": "mindful_hand_washing_00.mp3",
+        "text": "As the water runs, notice its temperature on your hands.",
+        "durationMs": 4171
+      },
+      {
+        "index": 1,
+        "file": "mindful_hand_washing_01.mp3",
+        "text": "Feel the soap. Notice the movement of your fingers, palms, and wrists.",
+        "durationMs": 6179
+      },
+      {
+        "index": 2,
+        "file": "mindful_hand_washing_02.mp3",
+        "text": "Take one slow breath in, and a longer breath out.",
+        "durationMs": 3957
+      },
+      {
+        "index": 3,
+        "file": "mindful_hand_washing_03.mp3",
+        "text": "As you rinse, let the last task rinse away with it. It is finished for now.",
+        "durationMs": 6243
+      },
+      {
+        "index": 4,
+        "file": "mindful_hand_washing_04.mp3",
+        "text": "Dry your hands slowly. You are ready for the next person.",
+        "durationMs": 4985
+      }
+    ],
+    "senses_54321": [
+      {
+        "index": 0,
+        "file": "senses_54321_00.mp3",
+        "text": "Wherever you are, pause. Take one slow breath, and look around you.",
+        "durationMs": 5561
+      },
+      {
+        "index": 1,
+        "file": "senses_54321_01.mp3",
+        "text": "Find five things you can see. Name each one quietly in your mind. Take your time with each.",
+        "durationMs": 7911
+      },
+      {
+        "index": 2,
+        "file": "senses_54321_02.mp3",
+        "text": "Now four things you can feel. Your feet in your shoes. Your clothes. The air on your skin. Something under your hand.",
+        "durationMs": 11181
+      },
+      {
+        "index": 3,
+        "file": "senses_54321_03.mp3",
+        "text": "Three things you can hear. Near sounds, far sounds. Let each one come to you.",
+        "durationMs": 7377
+      },
+      {
+        "index": 4,
+        "file": "senses_54321_04.mp3",
+        "text": "Two things you can smell. If nothing comes, notice the air moving in through your nose.",
+        "durationMs": 6819
+      },
+      {
+        "index": 5,
+        "file": "senses_54321_05.mp3",
+        "text": "One thing you can taste, or one slow sip of water if you have it.",
+        "durationMs": 4853
+      },
+      {
+        "index": 6,
+        "file": "senses_54321_06.mp3",
+        "text": "Take one more slow breath. Notice that you are here, in this place, right now. Carry on when you are ready.",
+        "durationMs": 8935
+      }
+    ],
+    "stop": [
+      {
+        "index": 0,
+        "file": "stop_00.mp3",
+        "text": "S. Stop. Whatever you are doing, pause for a moment.",
+        "durationMs": 6567
+      },
+      {
+        "index": 1,
+        "file": "stop_01.mp3",
+        "text": "T. Take a breath. One slow breath in, and a slow breath out.",
+        "durationMs": 7036
+      },
+      {
+        "index": 2,
+        "file": "stop_02.mp3",
+        "text": "O. Observe. What is happening in your body? What are you thinking? What are you feeling? Just notice.",
+        "durationMs": 11675
+      },
+      {
+        "index": 3,
+        "file": "stop_03.mp3",
+        "text": "P. Proceed. Choose what you will do next, on purpose.",
+        "durationMs": 6439
+      },
+      {
+        "index": 4,
+        "file": "stop_04.mp3",
+        "text": "That is the whole practice. You can use it any time, in a few seconds.",
+        "durationMs": 5923
+      }
+    ],
+    "self_compassion_break": [
+      {
+        "index": 0,
+        "file": "self_compassion_break_00.mp3",
+        "text": "Find a place where you can be still for a few minutes. Sit comfortably. Keep your eyes open or closed, whichever feels better.",
+        "durationMs": 10087
+      },
+      {
+        "index": 1,
+        "file": "self_compassion_break_01.mp3",
+        "text": "Bring to mind what was hard. You do not need to replay it. Just let yourself know that it happened, and that it affected you.",
+        "durationMs": 9425
+      },
+      {
+        "index": 2,
+        "file": "self_compassion_break_02.mp3",
+        "text": "Say quietly to yourself: this is a hard moment. This hurts. Let that be true, without pushing it away or making it bigger.",
+        "durationMs": 10535
+      },
+      {
+        "index": 3,
+        "file": "self_compassion_break_03.mp3",
+        "text": "Now remember that you are not alone in this. Caring for people is difficult work. Others in this job have felt exactly this.",
+        "durationMs": 9916
+      },
+      {
+        "index": 4,
+        "file": "self_compassion_break_04.mp3",
+        "text": "If it feels right, rest a hand on your chest or your arm. Feel the warmth and the gentle pressure of your own hand.",
+        "durationMs": 8462
+      },
+      {
+        "index": 5,
+        "file": "self_compassion_break_05.mp3",
+        "text": "Ask yourself: what would I say to a colleague who felt this way? Say those words to yourself now, in the same kind voice.",
+        "durationMs": 9358
+      },
+      {
+        "index": 6,
+        "file": "self_compassion_break_06.mp3",
+        "text": "You might try these words. May I be kind to myself. May I give myself what I need today.",
+        "durationMs": 7975
+      },
+      {
+        "index": 7,
+        "file": "self_compassion_break_07.mp3",
+        "text": "Take one slow breath. If this still feels heavy later, talking to someone you trust can help. Return when you are ready.",
+        "durationMs": 9724
+      }
+    ],
+    "leaving_work": [
+      {
+        "index": 0,
+        "file": "leaving_work_00.mp3",
+        "text": "Your shift is over. Sit or stand somewhere you will not be disturbed for a few minutes. Let your hands rest.",
+        "durationMs": 9148
+      },
+      {
+        "index": 1,
+        "file": "leaving_work_01.mp3",
+        "text": "Take three slow breaths. With each breath out, let your shoulders fall a little further from your ears.",
+        "durationMs": 7374
+      },
+      {
+        "index": 2,
+        "file": "leaving_work_02.mp3",
+        "text": "Bring your attention to your feet and legs. They have carried you all shift. Notice any tiredness there, and let them rest.",
+        "durationMs": 9148
+      },
+      {
+        "index": 3,
+        "file": "leaving_work_03.mp3",
+        "text": "Move your attention to your back and your stomach. Notice where you are holding on. You do not have to fix anything, just notice.",
+        "durationMs": 9425
+      },
+      {
+        "index": 4,
+        "file": "leaving_work_04.mp3",
+        "text": "Now your shoulders, arms, and hands. Let your hands be completely still. They have done enough for today.",
+        "durationMs": 8636
+      },
+      {
+        "index": 5,
+        "file": "leaving_work_05.mp3",
+        "text": "Notice your neck, your jaw, and your face. Let your jaw loosen. Let your forehead smooth out.",
+        "durationMs": 7996
+      },
+      {
+        "index": 6,
+        "file": "leaving_work_06.mp3",
+        "text": "Now picture the things you are still carrying from today. Tasks, faces, moments that went well, moments that did not.",
+        "durationMs": 8654
+      },
+      {
+        "index": 7,
+        "file": "leaving_work_07.mp3",
+        "text": "Imagine setting each one down, one at a time, in a locker or on a shelf at work. They will be there tomorrow. You do not need to carry them home.",
+        "durationMs": 11516
+      },
+      {
+        "index": 8,
+        "file": "leaving_work_08.mp3",
+        "text": "Name one thing you did today that helped someone. Let yourself take that in for a moment.",
+        "durationMs": 6691
+      },
+      {
+        "index": 9,
+        "file": "leaving_work_09.mp3",
+        "text": "If something is still unfinished, tell yourself: I did what I could with the time I had. The rest belongs to tomorrow.",
+        "durationMs": 8953
+      },
+      {
+        "index": 10,
+        "file": "leaving_work_10.mp3",
+        "text": "Take a slow breath and think of what is waiting for you now. A meal, a person, a bed, a quiet room.",
+        "durationMs": 7481
+      },
+      {
+        "index": 11,
+        "file": "leaving_work_11.mp3",
+        "text": "The shift is finished. When you stand up, leave it here.",
+        "durationMs": 5070
+      }
+    ],
+    "release_the_tension": [
+      {
+        "index": 0,
+        "file": "release_the_tension_00.mp3",
+        "text": "Sit or lie down comfortably. In this practice you will tighten each muscle group gently, then let it go. Never tighten to the point of pain, and skip any area that is injured or sore.",
+        "durationMs": 13991
+      },
+      {
+        "index": 1,
+        "file": "release_the_tension_01.mp3",
+        "text": "Take two slow breaths. Let your body settle into the chair or the bed.",
+        "durationMs": 5838
+      },
+      {
+        "index": 2,
+        "file": "release_the_tension_02.mp3",
+        "text": "Start with your feet. Curl your toes and tighten your feet. Hold for a few seconds. And release. Notice the difference.",
+        "durationMs": 11352
+      },
+      {
+        "index": 3,
+        "file": "release_the_tension_03.mp3",
+        "text": "Now your lower legs. Tighten your calves by pointing your toes toward your knees. Hold. And release. Let them go heavy.",
+        "durationMs": 11821
+      },
+      {
+        "index": 4,
+        "file": "release_the_tension_04.mp3",
+        "text": "Your thighs. Press your knees together and tighten. Hold. And release. Feel the tension drain away.",
+        "durationMs": 10648
+      },
+      {
+        "index": 5,
+        "file": "release_the_tension_05.mp3",
+        "text": "Your stomach. Pull it in gently and tighten. Hold. And release. Let your breathing return to normal.",
+        "durationMs": 10712
+      },
+      {
+        "index": 6,
+        "file": "release_the_tension_06.mp3",
+        "text": "Your hands. Make two fists and squeeze. Hold. And release. Let your fingers uncurl and rest.",
+        "durationMs": 10627
+      },
+      {
+        "index": 7,
+        "file": "release_the_tension_07.mp3",
+        "text": "Your arms. Bend your elbows and tighten your upper arms. Hold. And release. Let your arms rest at your sides.",
+        "durationMs": 11480
+      },
+      {
+        "index": 8,
+        "file": "release_the_tension_08.mp3",
+        "text": "Your shoulders. Lift them up toward your ears. Hold. And release. Let them drop all the way down.",
+        "durationMs": 10648
+      },
+      {
+        "index": 9,
+        "file": "release_the_tension_09.mp3",
+        "text": "Your neck. Gently press your head back against the chair or pillow. Hold. And release.",
+        "durationMs": 8874
+      },
+      {
+        "index": 10,
+        "file": "release_the_tension_10.mp3",
+        "text": "Your jaw. Press your teeth together gently. Hold. And release. Let your lips part slightly.",
+        "durationMs": 10264
+      },
+      {
+        "index": 11,
+        "file": "release_the_tension_11.mp3",
+        "text": "Your eyes and forehead. Close your eyes tightly and frown. Hold. And release. Let your face go smooth.",
+        "durationMs": 10861
+      },
+      {
+        "index": 12,
+        "file": "release_the_tension_12.mp3",
+        "text": "Now scan through your whole body, from your feet to your head. If you find any tension left, tighten that place once more, and let it go.",
+        "durationMs": 9486
+      },
+      {
+        "index": 13,
+        "file": "release_the_tension_13.mp3",
+        "text": "Rest here. Notice how your body feels now compared to when you began. Breathe slowly.",
+        "durationMs": 8060
+      },
+      {
+        "index": 14,
+        "file": "release_the_tension_14.mp3",
+        "text": "When you are ready, move your fingers and toes, take a deeper breath, and return.",
+        "durationMs": 5643
+      }
+    ],
+    "sleep_wind_down": [
+      {
+        "index": 0,
+        "file": "sleep_wind_down_00.mp3",
+        "text": "Lie down in the position you sleep in. Make the room as dark and quiet as you can. There is nothing left to do today.",
+        "durationMs": 9447
+      },
+      {
+        "index": 1,
+        "file": "sleep_wind_down_01.mp3",
+        "text": "Breathe in gently through your nose for a count of four. Breathe out slowly for a count of six. Keep this rhythm going on your own.",
+        "durationMs": 9852
+      },
+      {
+        "index": 2,
+        "file": "sleep_wind_down_02.mp3",
+        "text": "In for four. Out for six. Let each breath out be slow and unhurried.",
+        "durationMs": 7207
+      },
+      {
+        "index": 3,
+        "file": "sleep_wind_down_03.mp3",
+        "text": "Now let your breathing find its own pace. You do not need to count any more.",
+        "durationMs": 5859
+      },
+      {
+        "index": 4,
+        "file": "sleep_wind_down_04.mp3",
+        "text": "Bring your attention to your feet. Let them grow heavy and warm. Let them sink into the bed.",
+        "durationMs": 7719
+      },
+      {
+        "index": 5,
+        "file": "sleep_wind_down_05.mp3",
+        "text": "Let that heaviness move up into your ankles and your lower legs. They do not need to hold anything up.",
+        "durationMs": 7587
+      },
+      {
+        "index": 6,
+        "file": "sleep_wind_down_06.mp3",
+        "text": "Your knees and your thighs. Heavy and still. Supported completely by the bed.",
+        "durationMs": 7164
+      },
+      {
+        "index": 7,
+        "file": "sleep_wind_down_07.mp3",
+        "text": "Your hips and your lower back. Let the bed take your weight. Nothing to hold.",
+        "durationMs": 7057
+      },
+      {
+        "index": 8,
+        "file": "sleep_wind_down_08.mp3",
+        "text": "Your stomach, rising and falling by itself. Your chest, soft and easy.",
+        "durationMs": 6435
+      },
+      {
+        "index": 9,
+        "file": "sleep_wind_down_09.mp3",
+        "text": "Your hands. Let them rest wherever they are. Fingers loose. Palms soft.",
+        "durationMs": 8426
+      },
+      {
+        "index": 10,
+        "file": "sleep_wind_down_10.mp3",
+        "text": "Your arms and your shoulders. Let your shoulders melt down, away from your ears.",
+        "durationMs": 6457
+      },
+      {
+        "index": 11,
+        "file": "sleep_wind_down_11.mp3",
+        "text": "Your neck and the back of your head. Let the pillow hold the full weight of your head.",
+        "durationMs": 5902
+      },
+      {
+        "index": 12,
+        "file": "sleep_wind_down_12.mp3",
+        "text": "Your jaw, unclenched. Your tongue, resting. Your cheeks, soft.",
+        "durationMs": 6823
+      },
+      {
+        "index": 13,
+        "file": "sleep_wind_down_13.mp3",
+        "text": "Your eyes, heavy behind closed lids. Your forehead, smooth.",
+        "durationMs": 5561
+      },
+      {
+        "index": 14,
+        "file": "sleep_wind_down_14.mp3",
+        "text": "If thoughts about work come, let them pass like cars on a distant road. You do not need to follow them.",
+        "durationMs": 7907
+      },
+      {
+        "index": 15,
+        "file": "sleep_wind_down_15.mp3",
+        "text": "Your whole body is heavy now. Warm, still, and held.",
+        "durationMs": 5070
+      },
+      {
+        "index": 16,
+        "file": "sleep_wind_down_16.mp3",
+        "text": "With each breath out, let yourself sink a little deeper.",
+        "durationMs": 3915
+      },
+      {
+        "index": 17,
+        "file": "sleep_wind_down_17.mp3",
+        "text": "There is nothing more to do. Let sleep come when it comes.",
+        "durationMs": 4963
+      }
+    ],
+    "kindness_for_carers": [
+      {
+        "index": 0,
+        "file": "kindness_for_carers_00.mp3",
+        "text": "Sit comfortably and take a slow breath. In this practice you will offer kind wishes, first to yourself, then to others.",
+        "durationMs": 8867
+      },
+      {
+        "index": 1,
+        "file": "kindness_for_carers_01.mp3",
+        "text": "Begin with yourself. Picture yourself as you are right now, at the end of everything you have done today.",
+        "durationMs": 7822
+      },
+      {
+        "index": 2,
+        "file": "kindness_for_carers_02.mp3",
+        "text": "Silently offer these words. May I be safe. May I be at ease. May I be kind to myself.",
+        "durationMs": 9215
+      },
+      {
+        "index": 3,
+        "file": "kindness_for_carers_03.mp3",
+        "text": "Repeat them slowly, in your own time. If the words feel strange, that is fine. Just offer them.",
+        "durationMs": 8593
+      },
+      {
+        "index": 4,
+        "file": "kindness_for_carers_04.mp3",
+        "text": "Now bring to mind someone who is easy to care about. A friend, a family member, a child, or even a pet.",
+        "durationMs": 8483
+      },
+      {
+        "index": 5,
+        "file": "kindness_for_carers_05.mp3",
+        "text": "Offer them the same wishes. May you be safe. May you be at ease. May you be well.",
+        "durationMs": 8575
+      },
+      {
+        "index": 6,
+        "file": "kindness_for_carers_06.mp3",
+        "text": "Now think of a patient or a colleague you saw today. Someone who is having a hard time.",
+        "durationMs": 7033
+      },
+      {
+        "index": 7,
+        "file": "kindness_for_carers_07.mp3",
+        "text": "Offer them the same words. May you be safe. May you be at ease. May you be well.",
+        "durationMs": 8533
+      },
+      {
+        "index": 8,
+        "file": "kindness_for_carers_08.mp3",
+        "text": "You cannot fix everything for them. You can wish them well, and that is enough for this moment.",
+        "durationMs": 6819
+      },
+      {
+        "index": 9,
+        "file": "kindness_for_carers_09.mp3",
+        "text": "Now widen your attention to everyone who is caring for someone today. In hospitals, in clinics, at home.",
+        "durationMs": 8355
+      },
+      {
+        "index": 10,
+        "file": "kindness_for_carers_10.mp3",
+        "text": "May we all be safe. May we all be at ease. May we be kind to ourselves and to each other.",
+        "durationMs": 8188
+      },
+      {
+        "index": 11,
+        "file": "kindness_for_carers_11.mp3",
+        "text": "Come back to yourself. Take one slow breath, and return when you are ready.",
+        "durationMs": 6073
+      }
+    ],
+    "calm_place": [
+      {
+        "index": 0,
+        "file": "calm_place_00.mp3",
+        "text": "Sit or lie comfortably. Take two slow breaths. You can keep your eyes open and rest them on one spot, or close them.",
+        "durationMs": 9895
+      },
+      {
+        "index": 1,
+        "file": "calm_place_01.mp3",
+        "text": "Think of a place where you feel calm. It can be real or imagined. A beach, a garden, a quiet room, a hillside.",
+        "durationMs": 9468
+      },
+      {
+        "index": 2,
+        "file": "calm_place_02.mp3",
+        "text": "Look around this place in your mind. What can you see? Notice the colours, the light, how far you can see.",
+        "durationMs": 8572
+      },
+      {
+        "index": 3,
+        "file": "calm_place_03.mp3",
+        "text": "What can you hear in this place? Water, wind, birds, or simply quiet.",
+        "durationMs": 5902
+      },
+      {
+        "index": 4,
+        "file": "calm_place_04.mp3",
+        "text": "What can you feel? The temperature of the air. The ground or the seat beneath you. Sun or shade on your skin.",
+        "durationMs": 9727
+      },
+      {
+        "index": 5,
+        "file": "calm_place_05.mp3",
+        "text": "Is there a smell here? Salt air, grass, rain, food cooking. Breathe it in.",
+        "durationMs": 7356
+      },
+      {
+        "index": 6,
+        "file": "calm_place_06.mp3",
+        "text": "Rest in this place for a while. There is nothing you need to do here.",
+        "durationMs": 5283
+      },
+      {
+        "index": 7,
+        "file": "calm_place_07.mp3",
+        "text": "Choose one word for this place. Calm, home, still, or whatever fits. You can use this word to come back here another time.",
+        "durationMs": 9681
+      },
+      {
+        "index": 8,
+        "file": "calm_place_08.mp3",
+        "text": "Take a slow breath. Let the picture fade, and keep the feeling. Return when you are ready.",
+        "durationMs": 7953
+      }
+    ],
+    "full_body_scan": [
+      {
+        "index": 0,
+        "file": "full_body_scan_00.mp3",
+        "text": "Lie down or sit comfortably. This practice takes twenty minutes. Keep your eyes open if you prefer, and stop at any time if you need to.",
+        "durationMs": 10919
+      },
+      {
+        "index": 1,
+        "file": "full_body_scan_01.mp3",
+        "text": "The aim is not to relax or to change anything. It is simply to notice what is here, one part of the body at a time.",
+        "durationMs": 8974
+      },
+      {
+        "index": 2,
+        "file": "full_body_scan_02.mp3",
+        "text": "Begin with your breathing. Feel your stomach rise as you breathe in, and fall as you breathe out.",
+        "durationMs": 7353
+      },
+      {
+        "index": 3,
+        "file": "full_body_scan_03.mp3",
+        "text": "Now move your attention down to the toes of your left foot. Notice any feeling there. Warmth, coolness, tingling, or nothing at all.",
+        "durationMs": 10492
+      },
+      {
+        "index": 4,
+        "file": "full_body_scan_04.mp3",
+        "text": "The sole of your left foot, the heel, the top of the foot. Just notice.",
+        "durationMs": 6137
+      },
+      {
+        "index": 5,
+        "file": "full_body_scan_05.mp3",
+        "text": "Move up to your left ankle, your shin, your calf. Notice where your leg touches the floor or the bed.",
+        "durationMs": 7331
+      },
+      {
+        "index": 6,
+        "file": "full_body_scan_06.mp3",
+        "text": "Your left knee, and your left thigh. Notice the weight of your leg.",
+        "durationMs": 5347
+      },
+      {
+        "index": 7,
+        "file": "full_body_scan_07.mp3",
+        "text": "Now move across to the toes of your right foot. Notice whatever is there.",
+        "durationMs": 5838
+      },
+      {
+        "index": 8,
+        "file": "full_body_scan_08.mp3",
+        "text": "The sole of your right foot, the heel, the top of the foot.",
+        "durationMs": 4235
+      },
+      {
+        "index": 9,
+        "file": "full_body_scan_09.mp3",
+        "text": "Your right ankle, your shin, your calf.",
+        "durationMs": 3147
+      },
+      {
+        "index": 10,
+        "file": "full_body_scan_10.mp3",
+        "text": "Your right knee, and your right thigh. Notice the weight of this leg too.",
+        "durationMs": 5710
+      },
+      {
+        "index": 11,
+        "file": "full_body_scan_11.mp3",
+        "text": "If your mind has wandered, that is normal. Notice where it went, and gently bring it back to the body.",
+        "durationMs": 7587
+      },
+      {
+        "index": 12,
+        "file": "full_body_scan_12.mp3",
+        "text": "Bring your attention to your hips and your pelvis. Notice the contact with the surface beneath you.",
+        "durationMs": 7225
+      },
+      {
+        "index": 13,
+        "file": "full_body_scan_13.mp3",
+        "text": "Your lower back. This area often holds tension. Notice it without needing to change it.",
+        "durationMs": 8039
+      },
+      {
+        "index": 14,
+        "file": "full_body_scan_14.mp3",
+        "text": "Your stomach. Feel it moving with each breath.",
+        "durationMs": 4345
+      },
+      {
+        "index": 15,
+        "file": "full_body_scan_15.mp3",
+        "text": "Your upper back, and your shoulder blades.",
+        "durationMs": 3104
+      },
+      {
+        "index": 16,
+        "file": "full_body_scan_16.mp3",
+        "text": "Your chest. Notice your breathing here, and perhaps your heartbeat.",
+        "durationMs": 5753
+      },
+      {
+        "index": 17,
+        "file": "full_body_scan_17.mp3",
+        "text": "Now the fingers of your left hand. Your palm, the back of your hand, your wrist.",
+        "durationMs": 6286
+      },
+      {
+        "index": 18,
+        "file": "full_body_scan_18.mp3",
+        "text": "Your left forearm, your elbow, your upper arm, up to your shoulder.",
+        "durationMs": 4555
+      },
+      {
+        "index": 19,
+        "file": "full_body_scan_19.mp3",
+        "text": "The fingers of your right hand. Your palm, the back of your hand, your wrist.",
+        "durationMs": 6030
+      },
+      {
+        "index": 20,
+        "file": "full_body_scan_20.mp3",
+        "text": "Your right forearm, your elbow, your upper arm, up to your shoulder.",
+        "durationMs": 4725
+      },
+      {
+        "index": 21,
+        "file": "full_body_scan_21.mp3",
+        "text": "Both shoulders together. Notice how they are sitting. High, low, tight, or loose.",
+        "durationMs": 7377
+      },
+      {
+        "index": 22,
+        "file": "full_body_scan_22.mp3",
+        "text": "Your neck and your throat. Notice the air moving as you breathe.",
+        "durationMs": 5369
+      },
+      {
+        "index": 23,
+        "file": "full_body_scan_23.mp3",
+        "text": "Your jaw. Your mouth, your lips, your tongue.",
+        "durationMs": 4345
+      },
+      {
+        "index": 24,
+        "file": "full_body_scan_24.mp3",
+        "text": "Your nose and your cheeks. Your eyes, and the small muscles around them.",
+        "durationMs": 5881
+      },
+      {
+        "index": 25,
+        "file": "full_body_scan_25.mp3",
+        "text": "Your forehead, and the top and back of your head.",
+        "durationMs": 3595
+      },
+      {
+        "index": 26,
+        "file": "full_body_scan_26.mp3",
+        "text": "Now widen your attention to your whole body at once. From your feet to the top of your head, breathing.",
+        "durationMs": 7289
+      },
+      {
+        "index": 27,
+        "file": "full_body_scan_27.mp3",
+        "text": "Rest in this awareness of your whole body. Nothing to do, nothing to fix.",
+        "durationMs": 6350
+      },
+      {
+        "index": 28,
+        "file": "full_body_scan_28.mp3",
+        "text": "Begin to deepen your breath. Let some movement come back into your fingers and toes.",
+        "durationMs": 6371
+      },
+      {
+        "index": 29,
+        "file": "full_body_scan_29.mp3",
+        "text": "When you are ready, stretch gently and return. Notice how you feel now.",
+        "durationMs": 6051
+      }
+    ]
+  }
+}

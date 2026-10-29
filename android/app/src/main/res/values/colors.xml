@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- MindMate background (#FDF7EE), shown before Flutter draws its first frame. -->
+    <color name="launch_background">#FDF7EE</color>
+</resources>

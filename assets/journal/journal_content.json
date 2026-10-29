@@ -1,0 +1,147 @@
+{
+  "version": 1,
+  "notes": "Content for the MindMate journal. Load from assets/journal/journal_content.json. Wording is final unless Fahad changes it. Lexicon weights run from -2 (very heavy) to +2 (very light).",
+
+  "templates": [
+    {
+      "id": "after_shift",
+      "title": "After-shift debrief",
+      "line": "Three short questions to close the day",
+      "hint": "3 questions · about 3 min",
+      "saved": true,
+      "questions": [
+        { "id": "happened", "text": "What happened today?", "placeholder": "Just the facts, in a few lines…" },
+        { "id": "did_well", "text": "What did I do well?", "placeholder": "Even one small thing counts…" },
+        { "id": "leaving", "text": "What am I leaving at work?", "placeholder": "One thing you can put down tonight…" }
+      ]
+    },
+    {
+      "id": "moment",
+      "title": "Unpack a moment",
+      "line": "Something stuck with you? Look at it kindly",
+      "hint": "4 questions · about 5 min",
+      "saved": true,
+      "questions": [
+        { "id": "what", "text": "What happened?", "placeholder": "Describe it as if telling a friend…" },
+        { "id": "felt", "text": "What did I feel, and where in my body?", "placeholder": "Tight chest, heavy shoulders, racing thoughts…" },
+        { "id": "colleague", "text": "What would I say to a colleague who went through this?", "placeholder": "Be as kind to yourself as you would be to them…" },
+        { "id": "need", "text": "What do I need now?", "placeholder": "Rest, a talk, some water, a walk…" }
+      ]
+    },
+    {
+      "id": "let_it_out",
+      "title": "Let it out",
+      "line": "Write freely, then keep it or let it go",
+      "hint": "No questions · no limit",
+      "saved": false,
+      "questions": []
+    },
+    {
+      "id": "free",
+      "title": "Free write",
+      "line": "A blank page, your own words",
+      "hint": "No questions",
+      "saved": true,
+      "questions": []
+    }
+  ],
+
+  "prompts": [
+    { "text": "What took the most out of you today, and what gave something back?", "when": "evening" },
+    { "text": "Who made your shift a little easier today?", "when": "evening" },
+    { "text": "What is one thing you handled better than you expected?", "when": "evening" },
+    { "text": "What are you still carrying from work that you can put down?", "when": "evening" },
+    { "text": "What moment from today do you want to remember?", "when": "evening" },
+    { "text": "What would make tomorrow's shift feel a little lighter?", "when": "evening" },
+    { "text": "How is your body feeling right now, after today?", "when": "evening" },
+    { "text": "What is on your mind as the shift begins?", "when": "morning" },
+    { "text": "What is one small thing you can do for yourself today?", "when": "morning" },
+    { "text": "How did you sleep, and what helped or got in the way?", "when": "morning" },
+    { "text": "What are you looking forward to today, even a little?", "when": "morning" },
+    { "text": "What do you want to bring to your patients today?", "when": "morning" },
+    { "text": "What has been on repeat in your head lately?", "when": "any" },
+    { "text": "When did you last feel properly rested? What was different?", "when": "any" },
+    { "text": "What boundary would protect your energy this week?", "when": "any" },
+    { "text": "What is something you are proud of that nobody saw?", "when": "any" },
+    { "text": "Who could you reach out to this week, just to talk?", "when": "any" },
+    { "text": "What does a good day off look like for you?", "when": "any" },
+    { "text": "What is one worry you can write down and leave here?", "when": "any" },
+    { "text": "What made you smile recently, at work or at home?", "when": "any" }
+  ],
+
+  "tone": {
+    "minMatchedWords": 2,
+    "lightAtOrAbove": 0.5,
+    "heavyAtOrBelow": -0.5,
+    "negations": ["not", "no", "never", "dont", "don't", "didnt", "didn't", "cant", "can't", "couldnt", "couldn't", "wont", "won't", "isnt", "isn't", "wasnt", "wasn't", "without", "hardly", "nothing"],
+    "negationWindow": 2,
+    "negationFactor": -0.8,
+    "intensifiers": ["very", "so", "really", "extremely", "totally", "completely", "too", "super"],
+    "intensifierFactor": 1.5,
+    "labels": {
+      "light": "Light",
+      "mixed": "Mixed",
+      "heavy": "Heavy"
+    },
+    "savedLines": {
+      "light": "There is a lot of warmth in what you wrote.",
+      "mixed": "Some hard moments, and some good ones too.",
+      "heavy": "That sounds like a heavy one. Be gentle with yourself tonight.",
+      "none": "This entry is too short to read its tone."
+    },
+    "lexicon": {
+      "happy": 2, "joy": 2, "grateful": 2, "thankful": 2, "proud": 2, "wonderful": 2, "amazing": 2, "love": 2, "loved": 2, "great": 2, "excellent": 2, "delighted": 2, "blessed": 2,
+      "good": 1, "glad": 1, "calm": 1, "relaxed": 1, "rested": 1, "peaceful": 1, "hopeful": 1, "better": 1, "nice": 1, "kind": 1, "kindness": 1, "thanks": 1, "thank": 1,
+      "smile": 1, "smiled": 1, "laugh": 1, "laughed": 1, "fun": 1, "enjoyed": 1, "enjoy": 1, "helped": 1, "helpful": 1, "support": 1, "supported": 1, "supportive": 1,
+      "safe": 1, "okay": 0.5, "ok": 0.5, "fine": 0.5, "steady": 1, "managed": 1, "coped": 1, "recovered": 1, "improved": 1, "stable": 1, "discharged": 1,
+      "teamwork": 1, "appreciated": 2, "appreciate": 1, "confident": 1, "strong": 1, "energy": 1, "motivated": 1, "achieved": 1, "success": 1, "won": 1, "relief": 1, "relieved": 1,
+      "tired": -1, "busy": -1, "rushed": -1, "hard": -1, "difficult": -1, "stress": -1, "stressed": -1, "stressful": -1, "worried": -1, "worry": -1, "nervous": -1, "anxious": -1,
+      "upset": -1, "annoyed": -1, "frustrated": -1, "frustrating": -1, "angry": -1.5, "mad": -1, "sad": -1.5, "lonely": -1.5, "alone": -1, "ignored": -1.5, "unfair": -1,
+      "bad": -1, "worse": -1.5, "worst": -2, "awful": -2, "terrible": -2, "horrible": -2, "miserable": -2, "hopeless": -2, "helpless": -2, "worthless": -2, "useless": -2,
+      "exhausted": -1.5, "drained": -1.5, "burnt": -1.5, "burned": -1.5, "burnout": -2, "overwhelmed": -2, "overloaded": -1.5, "understaffed": -1.5, "shortstaffed": -1.5,
+      "guilty": -1.5, "guilt": -1.5, "ashamed": -1.5, "blame": -1, "blamed": -1.5, "mistake": -1, "failed": -1.5, "failure": -1.5, "regret": -1.5,
+      "scared": -1.5, "afraid": -1.5, "fear": -1.5, "panic": -2, "shaking": -1, "crying": -1.5, "cried": -1.5, "tears": -1, "hurt": -1.5, "pain": -1,
+      "death": -1, "died": -1.5, "lost": -1, "loss": -1.5, "grief": -1.5, "code": -0.5, "arrest": -0.5, "complaint": -1, "shouted": -1.5, "yelled": -1.5, "abused": -2,
+      "sleepless": -1.5, "insomnia": -1.5, "headache": -1, "sick": -1, "ill": -1, "numb": -1.5, "empty": -1.5, "stuck": -1, "trapped": -1.5, "pressure": -1, "chaos": -1.5, "chaotic": -1.5
+    }
+  },
+
+  "topics": {
+    "Workload": ["workload", "busy", "admissions", "admission", "overtime", "double", "understaffed", "shortstaffed", "rushed", "paperwork", "charting", "load"],
+    "Night shift": ["night", "nights", "nightshift", "overnight", "3am", "2am", "4am"],
+    "Patients": ["patient", "patients", "bed", "ward", "family", "relatives", "discharge", "discharged", "admitted", "code", "resus", "died", "death"],
+    "Team": ["team", "colleague", "colleagues", "nurse", "nurses", "doctor", "doctors", "consultant", "senior", "staff", "handover", "covered", "manager", "supervisor"],
+    "Sleep": ["sleep", "slept", "sleeping", "tired", "insomnia", "nap", "rested", "awake"],
+    "Family": ["family", "ammi", "abbu", "mother", "father", "mum", "mom", "dad", "kids", "children", "son", "daughter", "husband", "wife", "home", "parents", "sister", "brother"],
+    "Health": ["headache", "sick", "ill", "pain", "back", "eating", "water", "health"],
+    "Exercise": ["walk", "walked", "gym", "run", "ran", "exercise", "yoga", "swim"],
+    "Rest day": ["off", "dayoff", "rest", "weekend", "holiday", "leave"]
+  },
+
+  "support": {
+    "notes": "Lower-case phrase match on the whole entry text after removing punctuation and collapsing spaces. Any match shows the support card instead of the tone. Never store a flag, never log the match, never send it anywhere.",
+    "phrases": [
+      "kill myself", "killing myself", "end my life", "end it all", "ending it all", "take my life", "take my own life",
+      "want to die", "wanna die", "wish i was dead", "wish i were dead", "better off dead", "better off without me",
+      "no reason to live", "nothing to live for", "dont want to live", "don't want to live", "dont want to be here", "don't want to be here",
+      "suicide", "suicidal", "hurt myself", "harm myself", "self harm", "selfharm", "cut myself", "overdose",
+      "cant go on", "can't go on", "no way out", "disappear forever"
+    ],
+    "card": {
+      "title": "Thank you for writing this down.",
+      "body": "Some of what you wrote sounds really heavy. You do not have to carry it alone. Talking to someone can help right now.",
+      "primary": "Talk to someone now",
+      "footnote": "If you are in danger right now, call your local emergency number. MindMate is not an emergency service.",
+      "secondary": "Breathe with me first",
+      "tertiary": "Back to my journal"
+    }
+  },
+
+  "practiceSuggestions": {
+    "notes": "Ids match meditation_sessions.json. Hide the card if the meditation module or the id is missing.",
+    "heavy": "self_compassion_break",
+    "mixedFrom17": "leaving_work",
+    "mixed": "three_step_pause",
+    "light": null
+  }
+}
