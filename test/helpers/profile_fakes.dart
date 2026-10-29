@@ -36,8 +36,16 @@ class FakeProfileService extends ProfileFirestoreService {
   /// If true, saving a profile never finishes (like being offline).
   bool neverFinishes = false;
 
+  /// Whether the user joined a hospital. True by default, so tests about
+  /// other screens are not sent to "Join your hospital".
+  bool hasOrg = true;
+
   @override
   Future<bool> profileExists() async => profile != null;
+
+  @override
+  Future<({bool hasProfile, bool hasOrg})> setupState() async =>
+      (hasProfile: profile != null, hasOrg: hasOrg);
 
   @override
   UserProfile signedInUserDefaults() => signedIn;

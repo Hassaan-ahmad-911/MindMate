@@ -146,7 +146,7 @@ class _IntroView extends StatelessWidget {
               const SizedBox(height: 6),
               Text(
                 '${def.scale} · ${def.items.length} questions · '
-                'about ${def.minutes} minutes',
+                '${def.aboutMinutes}',
                 style: AppFonts.body(
                   size: 15,
                   weight: FontWeight.w600,
@@ -399,10 +399,32 @@ class _SafetyView extends StatelessWidget {
                 onTap: controller.reachOut,
               ),
               const SizedBox(height: 16),
-              Text(
-                s.footnote,
-                style: AppFonts.label(size: 13, color: c.textBody),
-              ),
+              Obx(() {
+                final ({String lead, String bold})? hospital =
+                    controller.programmeFootnote;
+                if (hospital == null) {
+                  return Text(
+                    s.footnote,
+                    style: AppFonts.label(size: 13, color: c.textBody),
+                  );
+                }
+                return Text.rich(
+                  TextSpan(
+                    style: AppFonts.label(size: 13, color: c.textBody),
+                    children: <InlineSpan>[
+                      TextSpan(text: hospital.lead),
+                      TextSpan(
+                        text: hospital.bold,
+                        style: AppFonts.label(
+                          size: 13,
+                          weight: FontWeight.w700,
+                          color: c.textPrimary,
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              }),
             ],
           ),
         ),

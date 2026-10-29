@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 
 import '../../Models/home_dashboard.dart';
 import '../../Models/meditation_suggester.dart';
+import '../../Models/programme_schedule.dart';
 import '../../viewmodels/home_viewmodel.dart';
 import '../shared/blended_background.dart';
 import '../shared/mindmate_theme.dart';
@@ -10,6 +11,7 @@ import 'widgets/animated_name.dart';
 import 'widgets/home_mood_card.dart';
 import 'widgets/home_sections.dart';
 import 'widgets/home_skeleton.dart';
+import 'widgets/today_check_ins_card.dart';
 
 /// The home dashboard: greeting, the mood card, three numbers, a suggested
 /// practice, the Explore grid and the support card.
@@ -301,10 +303,13 @@ class _HomeViewState extends State<HomeView>
   // Mood card and stats.
   // ---------------------------------------------------------------------------
 
+  /// The mood card; for hospital staff the same card shows today's
+  /// check-ins, with their list under it.
   Widget _moodCard() {
     return Obx(() {
       final MoodCardContent content = _vm.moodCard;
-      return HomeMoodCard(
+      final List<ScheduleRow>? checkIns = _vm.todayCheckIns;
+      final Widget card = HomeMoodCard(
         dayPart: _vm.dayPart,
         title: content.title,
         buttonLabel: content.buttonLabel,
@@ -312,6 +317,30 @@ class _HomeViewState extends State<HomeView>
         isLoadingTitle: _vm.moodStatus.value == SectionStatus.loading,
         bubble: _vm.bubbleText.value,
         playIntro: _vm.animateIntro,
+        checkIns: checkIns == null
+            ? null
+            : HomeCheckInsSummary(
+                line: ProgrammeSchedule.cardLine(checkIns),
+                progress: checkIns.isEmpty
+                    ? 1
+                    : checkIns.where((ScheduleRow r) => r.done).length /
+                          checkIns.length,
+              ),
+      );
+      if (checkIns == null) {
+        return card;
+      }
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[
+          card,
+          const SizedBox(height: 12),
+          TodayCheckInsCard(
+            rows: checkIns,
+            subtitle: _vm.checkInSubtitle,
+            onStart: _vm.startCheckIn,
+          ),
+        ],
       );
     });
   }

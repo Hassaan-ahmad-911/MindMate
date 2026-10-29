@@ -8,7 +8,7 @@ import '../shared/gradient_button.dart';
 import '../shared/mindmate_theme.dart';
 import 'widgets/setup_widgets.dart';
 
-/// Profile setup, step 2 of 3: role, usual shifts, years in healthcare and an
+/// Profile setup, step 3 of 3: role, usual shifts, years in healthcare and an
 /// optional department. "Continue" saves the profile.
 class ProfileWorkView extends GetView<ProfileViewModel> {
   const ProfileWorkView({super.key});
@@ -23,7 +23,7 @@ class ProfileWorkView extends GetView<ProfileViewModel> {
             children: <Widget>[
               Padding(
                 padding: const EdgeInsets.fromLTRB(20, 12, 20, 0),
-                child: SetupTopBar(step: 2, onBack: Get.back),
+                child: SetupTopBar(step: 3, onBack: Get.back),
               ),
               Expanded(
                 child: ListView(

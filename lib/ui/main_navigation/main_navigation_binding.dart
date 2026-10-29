@@ -10,6 +10,7 @@ import '../../viewmodels/main_navigation_viewmodel.dart';
 import '../ai_chat/ai_chat_viewmodel.dart';
 import '../journal/journal_binding.dart';
 import '../mood_tracking/mood_tracking_viewmodel.dart';
+import '../programme/wellbeing_programme_controller.dart';
 import '../settings/settings_binding.dart';
 
 /// Everything the five tabs need. The repositories are already registered by
@@ -34,6 +35,9 @@ class MainNavigationBinding extends Bindings {
         Get.find<ProfileRepository>(),
         Get.find<MeditationRepository>(),
         Get.find<HomeRepository>(),
+        programme: Get.isRegistered<WellbeingProgrammeController>()
+            ? Get.find<WellbeingProgrammeController>()
+            : null,
       ),
     );
     Get.put<MoodTrackingViewModel>(

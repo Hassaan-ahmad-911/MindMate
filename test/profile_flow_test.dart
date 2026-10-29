@@ -86,7 +86,7 @@ void main() {
 
       expect(find.text('About you'), findsOneWidget);
       expect(find.text('So MindMate knows what to call you.'), findsOneWidget);
-      expect(find.text('1 of 3'), findsOneWidget);
+      expect(find.text('2 of 3'), findsOneWidget);
       expect(find.text('Photo is optional'), findsOneWidget);
       expect(find.text('Female'), findsOneWidget);
       expect(find.text('Male'), findsOneWidget);
@@ -165,7 +165,7 @@ void main() {
       await go(tester);
 
       expect(find.text('Your work'), findsOneWidget);
-      expect(find.text('2 of 3'), findsOneWidget);
+      expect(find.text('3 of 3'), findsOneWidget);
       expect(find.text('Doctor'), findsOneWidget);
       expect(find.text('Admin staff'), findsOneWidget);
       expect(find.text('On call'), findsOneWidget);

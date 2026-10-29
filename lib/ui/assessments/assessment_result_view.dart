@@ -227,6 +227,13 @@ class _ResultFrame extends StatelessWidget {
                   onAction: controller.retrySave,
                 ),
               ],
+              for (final FollowUpRule rule in controller.followUps) ...<Widget>[
+                const SizedBox(height: 14),
+                FollowUpCard(
+                  text: rule.text,
+                  onTake: () => controller.takeFollowUp(rule),
+                ),
+              ],
               if (nextStep != null) ...<Widget>[
                 const SizedBox(height: 18),
                 NextStepCard(text: nextStep, onSupport: controller.openSupport),

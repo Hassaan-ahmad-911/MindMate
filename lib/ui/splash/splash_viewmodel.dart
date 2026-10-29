@@ -60,7 +60,8 @@ class SplashViewModel extends GetxController {
   }
 
   /// Welcome when nobody is signed in (or the check fails); otherwise the
-  /// signed-in checks: email confirmed, then Home or the profile setup.
+  /// signed-in checks: email confirmed, joined a hospital, then Home or the
+  /// profile setup (see `AppRouteGate`).
   @visibleForTesting
   Future<String> resolveRoute() async {
     try {
@@ -90,9 +91,9 @@ class SplashViewModel extends GetxController {
       );
     }
 
-    final bool profileExists;
+    final ({bool hasProfile, bool hasOrg}) state;
     try {
-      profileExists = await _profileRepository.profileExists().timeout(
+      state = await _profileRepository.setupState().timeout(
         _profileCheckTimeout,
       );
     } catch (_) {
@@ -101,7 +102,10 @@ class SplashViewModel extends GetxController {
       return AppRoutes.home;
     }
 
-    return PostAuthRouting.routeFor(hasProfile: profileExists);
+    return PostAuthRouting.routeFor(
+      hasProfile: state.hasProfile,
+      hasOrg: state.hasOrg,
+    );
   }
 
   /// Removes the old "seen onboarding" flag from this phone.

@@ -63,6 +63,22 @@ class ProfileFirestoreService {
     return snapshot.exists && UserProfile.isStoredProfile(snapshot.data());
   }
 
+  /// One read for the start-up checks: whether the user has a profile and
+  /// whether they joined a hospital (`orgId`, set only by the server).
+  Future<({bool hasProfile, bool hasOrg})> setupState() async {
+    final User user = _currentUser();
+    final DocumentSnapshot<Map<String, dynamic>> snapshot = await _firestore
+        .collection('users')
+        .doc(user.uid)
+        .get();
+    final Map<String, dynamic>? data = snapshot.data();
+    final Object? orgId = data?['orgId'];
+    return (
+      hasProfile: snapshot.exists && UserProfile.isStoredProfile(data),
+      hasOrg: orgId is String && orgId.isNotEmpty,
+    );
+  }
+
   /// What the sign-in itself knows about the user (for example the name and
   /// photo of a Google account), to fill in the first setup screen. The name
   /// is empty if there is none.

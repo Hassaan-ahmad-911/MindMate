@@ -11,6 +11,10 @@ import 'home_skeleton.dart';
 /// bubble can pop in over it.
 ///
 /// "Log mood" can be tapped from the first frame: nothing here waits for data.
+///
+/// For hospital staff ([checkIns] given) the same card shows today's
+/// check-ins instead: a peach label, "1 of 2 done ..." and a gold progress
+/// bar where the button was.
 class HomeMoodCard extends StatefulWidget {
   const HomeMoodCard({
     super.key,
@@ -21,6 +25,7 @@ class HomeMoodCard extends StatefulWidget {
     required this.isLoadingTitle,
     required this.bubble,
     required this.playIntro,
+    this.checkIns,
   });
 
   final DayPart dayPart;
@@ -36,6 +41,9 @@ class HomeMoodCard extends StatefulWidget {
 
   /// Plays the sun or moon rising. False shows the final picture.
   final bool playIntro;
+
+  /// Today's check-ins, for users in a hospital; null shows the mood card.
+  final HomeCheckInsSummary? checkIns;
 
   static const String robotAsset = 'assets/images/robot_hello.png';
   static const String robotFallbackAsset =
@@ -213,6 +221,10 @@ class _HomeMoodCardState extends State<HomeMoodCard>
   // ---------------------------------------------------------------------------
 
   Widget _text(_Look look) {
+    final HomeCheckInsSummary? checkIns = widget.checkIns;
+    if (checkIns != null) {
+      return _checkInsText(look, checkIns);
+    }
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -250,6 +262,77 @@ class _HomeMoodCardState extends State<HomeMoodCard>
             label: widget.buttonLabel,
             look: look,
             onPressed: widget.onLog,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _checkInsText(_Look look, HomeCheckInsSummary checkIns) {
+    final bool light = widget.dayPart == DayPart.morning;
+    final double progress = checkIns.progress.clamp(0.0, 1.0);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text(
+              "TODAY'S CHECK-INS",
+              style: AppFonts.label(
+                size: 12.5,
+                weight: FontWeight.w700,
+                letterSpacing: 1.4,
+                color: light
+                    ? AppColors.headerBlue.withValues(alpha: 0.75)
+                    : AppColors.softSurface,
+              ),
+            ),
+            const SizedBox(height: 8),
+            if (widget.isLoadingTitle)
+              const SkeletonBar(width: 150, height: 20, onDark: true)
+            else
+              Semantics(
+                header: true,
+                child: Text(
+                  checkIns.line,
+                  style: AppFonts.body(
+                    size: 21,
+                    weight: FontWeight.w700,
+                    color: look.text,
+                    height: 1.22,
+                  ),
+                ),
+              ),
+          ],
+        ),
+        Semantics(
+          label: '${(progress * 100).round()} percent of today done',
+          excludeSemantics: true,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(4),
+            child: SizedBox(
+              height: 7,
+              child: Stack(
+                children: <Widget>[
+                  Positioned.fill(
+                    child: ColoredBox(
+                      color: light
+                          ? AppColors.headerBlue.withValues(alpha: 0.15)
+                          : Colors.white.withValues(alpha: 0.22),
+                    ),
+                  ),
+                  FractionallySizedBox(
+                    widthFactor: progress,
+                    child: const DecoratedBox(
+                      decoration: BoxDecoration(gradient: AppBlends.gold),
+                      child: SizedBox.expand(),
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ),
         ),
       ],
@@ -422,6 +505,17 @@ class _StarSpec {
   final double y;
   final double size;
   final double phase;
+}
+
+/// What the top card shows for hospital staff.
+class HomeCheckInsSummary {
+  const HomeCheckInsSummary({required this.line, required this.progress});
+
+  /// "1 of 2 done. One short check left."
+  final String line;
+
+  /// 0 to 1.
+  final double progress;
 }
 
 class _LogButton extends StatelessWidget {

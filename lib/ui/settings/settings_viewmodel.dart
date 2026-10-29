@@ -6,6 +6,7 @@ import '../../Data/repositories/account_repository.dart';
 import '../../Data/repositories/auth_repository.dart';
 import '../../Data/repositories/profile_repository.dart';
 import '../../Data/repositories/settings_repository.dart';
+import '../../Models/hospital_programme.dart';
 import '../../Models/meditation_audio.dart';
 import '../../Models/theme_preferences.dart';
 import '../../Models/user_profile.dart';
@@ -14,6 +15,7 @@ import '../../services/theme_controller.dart';
 import '../app/app_info.dart';
 import '../app/app_routes.dart';
 import '../app/user_session.dart';
+import '../programme/wellbeing_programme_controller.dart';
 import '../shared/app_feedback.dart';
 
 /// Settings: the tab, its sub-screens (Reminders, Theme, Privacy) and the
@@ -26,12 +28,14 @@ class SettingsViewModel extends GetxController {
     ProfileRepository? profiles,
     AccountRepository? account,
     ThemeController? theme,
+    WellbeingProgrammeController? programme,
     this.cleanupDelay = const Duration(milliseconds: 700),
     void Function()? goToWelcome,
   }) : _settingsRepository = settings,
        _profiles = profiles,
        _account = account,
        _theme = theme,
+       _programme = programme,
        _goToWelcome = goToWelcome ?? _openWelcome;
 
   final AuthRepository _authRepository;
@@ -39,6 +43,7 @@ class SettingsViewModel extends GetxController {
   final ProfileRepository? _profiles;
   final AccountRepository? _account;
   final ThemeController? _theme;
+  final WellbeingProgrammeController? _programme;
 
   /// How long to wait, after moving to Welcome, before the old screens'
   /// ViewModels are removed, so they are not taken away while their screens
@@ -61,6 +66,7 @@ class SettingsViewModel extends GetxController {
   void onInit() {
     super.onInit();
     unawaited(load());
+    unawaited(_programme?.loadMembership());
   }
 
   Future<void> load() async {
@@ -90,6 +96,9 @@ class SettingsViewModel extends GetxController {
   }
 
   // What the Settings screen shows.
+
+  /// The user's hospital, or null for someone not in one (no row).
+  HospitalMembership? get hospital => _programme?.membership.value;
 
   /// "Nurse · Medical ward", or just the role.
   String get profileLine {
@@ -236,6 +245,8 @@ class SettingsViewModel extends GetxController {
     await Get.toNamed<void>(AppRoutes.settingsProfile);
     await refreshProfile();
   }
+
+  void openHospital() => Get.toNamed<void>(AppRoutes.settingsHospital);
 
   void openReminders() => Get.toNamed<void>(AppRoutes.settingsReminders);
 

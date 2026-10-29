@@ -3,12 +3,18 @@ import '../../Models/mood_stats.dart';
 import '../../services/mood_firestore_service.dart';
 
 class MoodRepository {
-  MoodRepository(this._service);
+  MoodRepository(this._service, {void Function()? onSaved})
+    : _onSaved = onSaved;
 
   final MoodFirestoreService _service;
 
-  Future<MoodModel> saveMood(MoodModel mood) {
-    return _service.saveMood(mood);
+  /// Called after a mood is saved (the hospital programme's evaluation).
+  final void Function()? _onSaved;
+
+  Future<MoodModel> saveMood(MoodModel mood) async {
+    final MoodModel saved = await _service.saveMood(mood);
+    _onSaved?.call();
+    return saved;
   }
 
   Future<List<MoodModel>> getMoodHistory() {

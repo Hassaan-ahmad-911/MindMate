@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'programme_schedule.dart';
+
 /// One answer choice and the value it scores.
 class AnswerOption {
   const AnswerOption({required this.label, required this.value});
@@ -25,6 +27,7 @@ class AssessmentItem {
     this.area,
     this.reverse = false,
     this.safety = false,
+    this.part,
   });
 
   /// 1-based item number.
@@ -34,6 +37,9 @@ class AssessmentItem {
 
   /// The area this item counts towards (CBI and workplace).
   final String? area;
+
+  /// The short scale inside a longer one: `phq2` or `gad2` in the PHQ-4.
+  final String? part;
 
   /// Scored as (lowest + highest value) minus the answer.
   final bool reverse;
@@ -183,6 +189,31 @@ class PracticeRule {
   final String practiceId;
 }
 
+/// A fuller check-in suggested on the result, when the answers to one part
+/// add up to [from] or more (PHQ-4: PHQ-2 suggests PHQ-9, GAD-2 GAD-7).
+class FollowUpRule {
+  const FollowUpRule({
+    required this.part,
+    required this.from,
+    required this.assessmentId,
+    required this.text,
+  });
+
+  final String part;
+  final int from;
+  final String assessmentId;
+  final String text;
+
+  factory FollowUpRule.fromMap(Map<String, dynamic> map) {
+    return FollowUpRule(
+      part: _requiredString(map, 'part'),
+      from: _requiredInt(map, 'from'),
+      assessmentId: _requiredString(map, 'assessmentId'),
+      text: _requiredString(map, 'text'),
+    );
+  }
+}
+
 enum ScoringMethod { sum, sumTimes4, areaMean, areaPercent }
 
 /// One questionnaire, from the content file.
@@ -211,6 +242,7 @@ class AssessmentDefinition {
     required this.topLines,
     required this.nextSteps,
     required this.practice,
+    this.followUps = const <FollowUpRule>[],
   });
 
   final String id;
@@ -242,6 +274,7 @@ class AssessmentDefinition {
   final Map<String, String> topLines;
   final List<NextStep> nextSteps;
   final PracticeRule? practice;
+  final List<FollowUpRule> followUps;
 
   bool get hasAreas =>
       method == ScoringMethod.areaMean || method == ScoringMethod.areaPercent;
@@ -249,8 +282,35 @@ class AssessmentDefinition {
   /// True for the CBI, which has area scores but no total.
   bool get hasTotal => method != ScoringMethod.areaMean;
 
-  /// "Burnout check", or the name itself when it already reads as a title.
-  String get checkTitle => name.startsWith('Your ') ? name : '$name check';
+  /// "Burnout check", or the name itself when it already reads as a title
+  /// ("Your workplace", "3-day check").
+  String get checkTitle =>
+      name.startsWith('Your ') || name.toLowerCase().endsWith('check')
+      ? name
+      : '$name check';
+
+  /// "about 1 minute", "about 4 minutes".
+  String get aboutMinutes =>
+      minutes == 1 ? 'about 1 minute' : 'about $minutes minutes';
+
+  /// The follow-ups whose part adds up to their threshold, in file order.
+  /// [answers] are the raw values in item order.
+  List<FollowUpRule> followUpsFor(List<int> answers) {
+    return <FollowUpRule>[
+      for (final FollowUpRule rule in followUps)
+        if (_partSum(rule.part, answers) >= rule.from) rule,
+    ];
+  }
+
+  int _partSum(String part, List<int> answers) {
+    int sum = 0;
+    for (int i = 0; i < items.length && i < answers.length; i += 1) {
+      if (items[i].part == part) {
+        sum += answers[i];
+      }
+    }
+    return sum;
+  }
 
   /// The best range: the lowest when lower is better, else the highest.
   AssessmentBand get bestBand => lowerIsBetter ? bands.first : bands.last;
@@ -301,6 +361,7 @@ class AssessmentDefinition {
             area: _optionalString(item, 'area'),
             reverse: item['reverse'] == true,
             safety: item['safety'] == true,
+            part: _optionalString(item, 'part'),
           );
         })
         .toList(growable: false);
@@ -370,6 +431,11 @@ class AssessmentDefinition {
               practiceId: _requiredString(practice.cast(), 'id'),
             )
           : null,
+      followUps: List<FollowUpRule>.unmodifiable(
+        (map['followUp'] as List? ?? const <Object>[]).map(
+          (Object? f) => FollowUpRule.fromMap((f as Map).cast()),
+        ),
+      ),
     );
   }
 
@@ -459,6 +525,7 @@ class AssessmentContent {
     required this.suggestOrder,
     required this.item9,
     required this.disclaimer,
+    this.programme,
   });
 
   static const String assetPath = 'assets/assessments/assessments_content.json';
@@ -469,6 +536,9 @@ class AssessmentContent {
   final List<String> suggestOrder;
   final Item9Safety item9;
   final String disclaimer;
+
+  /// The hospital programme's required schedule, if the file has one.
+  final ProgrammeConfig? programme;
 
   AssessmentDefinition? byId(String id) {
     for (final AssessmentDefinition a in assessments) {
@@ -531,6 +601,9 @@ class AssessmentContent {
       ),
       item9: Item9Safety.fromMap((safety['item9'] as Map).cast()),
       disclaimer: (decoded['disclaimer'] as String?) ?? '',
+      programme: decoded['programme'] is Map
+          ? ProgrammeConfig.fromMap((decoded['programme'] as Map).cast())
+          : null,
     );
   }
 }

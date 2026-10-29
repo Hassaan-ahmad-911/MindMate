@@ -17,10 +17,26 @@ service cloud.firestore {
       return request.auth != null && request.auth.token.email_verified == true;
     }
 
+    // The hospital membership. Only the server (Admin SDK) writes these, when
+    // someone joins with their hospital's code.
+    function orgKeys() {
+      return ['orgId', 'orgJoinedAt', 'orgConsentAt'];
+    }
+
+    // The orgId on the signed-in user's own profile, or null.
+    function myOrgId() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.get('orgId', null);
+    }
+
     match /users/{userId} {
       // Owner-only. This also lets the app set `journalsMigratedAt` once the
-      // old journal entries have been moved.
-      allow create, read, update, delete: if isOwner(userId) && verified();
+      // old journal entries have been moved. The app may never set or change
+      // the hospital membership.
+      allow read, delete: if isOwner(userId) && verified();
+      allow create: if isOwner(userId) && verified()
+        && !request.resource.data.keys().hasAny(orgKeys());
+      allow update: if isOwner(userId) && verified()
+        && !request.resource.data.diff(resource.data).affectedKeys().hasAny(orgKeys());
 
       match /moods/{moodId} {
         allow create, read, update, delete: if isOwner(userId) && verified();
@@ -55,6 +71,27 @@ service cloud.firestore {
       match /journal_drafts/{draftId} {
         allow create, read, update, delete: if isOwner(userId) && verified();
       }
+
+      // "Your officer was asked to reach out" records. Written only by the
+      // server; the owner reads them, and deletes them with their account.
+      match /wellbeing_alerts/{alertId} {
+        allow read, delete: if isOwner(userId) && verified();
+      }
+    }
+
+    // Hospitals: name, code and wellbeing officer. Readable by a verified
+    // member of that hospital only; written only by the admin script.
+    match /organizations/{orgId} {
+      allow read: if verified() && myOrgId() == orgId;
+      // No rule for organizations/{orgId}/private/{doc} (the officer's
+      // email), on purpose: this rule does not reach subcollections, and with
+      // no matching rule Firestore denies every client. Only the server
+      // (Admin SDK) reads it.
+    }
+
+    // The server's alert bookkeeping. No client access.
+    match /alert_state/{doc} {
+      allow read, write: if false;
     }
 
     // The old top-level journal collection. Kept only so the app can read

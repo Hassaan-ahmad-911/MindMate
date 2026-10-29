@@ -400,11 +400,15 @@ class ConsentCard extends StatelessWidget {
     required this.checked,
     required this.onChanged,
     this.enabled = true,
+    this.text = disclaimerText,
   });
 
   final bool checked;
   final ValueChanged<bool> onChanged;
   final bool enabled;
+
+  /// The agreement; the self-support notice unless given.
+  final String text;
 
   @override
   Widget build(BuildContext context) {
@@ -418,7 +422,7 @@ class ConsentCard extends StatelessWidget {
       container: true,
       checked: checked,
       enabled: enabled,
-      label: disclaimerText,
+      label: text,
       onTap: enabled ? toggle : null,
       excludeSemantics: true,
       child: Material(
@@ -440,7 +444,7 @@ class ConsentCard extends StatelessWidget {
                 const SizedBox(width: 12),
                 Expanded(
                   child: Text(
-                    disclaimerText,
+                    text,
                     style: AppFonts.body(
                       size: 15.5,
                       weight: FontWeight.w500,

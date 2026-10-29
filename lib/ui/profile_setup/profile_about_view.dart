@@ -10,7 +10,8 @@ import '../shared/gradient_button.dart';
 import '../shared/mindmate_theme.dart';
 import 'widgets/setup_widgets.dart';
 
-/// Profile setup, step 1 of 3: photo, name, age and gender.
+/// Profile setup, step 2 of 3 (after joining the hospital): photo, name,
+/// age and gender.
 class ProfileAboutView extends GetView<ProfileViewModel> {
   const ProfileAboutView({super.key});
 
@@ -24,7 +25,7 @@ class ProfileAboutView extends GetView<ProfileViewModel> {
             children: <Widget>[
               const Padding(
                 padding: EdgeInsets.fromLTRB(20, 16, 20, 0),
-                child: SetupTopBar(step: 1),
+                child: SetupTopBar(step: 2),
               ),
               Expanded(
                 child: ListView(

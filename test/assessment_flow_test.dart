@@ -4,8 +4,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:get/get.dart';
 import 'package:mindmate/Models/assessment_result.dart';
 import 'package:mindmate/ui/app/app_routes.dart';
+import 'package:mindmate/ui/programme/wellbeing_programme_controller.dart';
 
 import 'helpers/assessment_app.dart';
+import 'helpers/programme_fakes.dart';
 
 void ignoreOverflowErrors() {
   final FlutterExceptionHandler? original = FlutterError.onError;
@@ -83,15 +85,15 @@ void main() {
 
       expect(find.text('Check-ins'), findsOneWidget);
       expect(find.text('SUGGESTED THIS WEEK'), findsOneWidget);
-      expect(find.text('Burnout check'), findsOneWidget);
+      expect(find.text('3-day check'), findsWidgets);
       expect(
-        find.text('You have not taken it yet. 19 questions, about 4 minutes.'),
+        find.text('You have not taken it yet. 4 questions, about 1 minute.'),
         findsOneWidget,
       );
       expect(find.text('MOOD AND WORRY'), findsOneWidget);
       expect(find.text('PHQ-9 · 9 questions'), findsOneWidget);
       expect(find.text('Moderate'), findsOneWidget);
-      expect(find.text('Not taken'), findsNWidgets(5));
+      expect(find.text('Not taken'), findsNWidgets(6));
       expect(
         find.text(
           'Your answers are private. Results help you spot changes over time.',
@@ -231,6 +233,96 @@ void main() {
       expect(find.text('PAGE ${AppRoutes.support}'), findsOneWidget);
       expect(app.service.stored, isEmpty);
       expect(app.repository.item9PositiveThisSession, isTrue);
+    });
+
+    group('for hospital staff', () {
+      const String usual =
+          'If you might act on these thoughts, call your local emergency '
+          'number now. MindMate is not an emergency service and will not '
+          'contact anyone for you.';
+
+      String allText(WidgetTester tester) => tester
+          .widgetList<RichText>(find.byType(RichText))
+          .map((RichText t) => t.text.toPlainText())
+          .join('\n');
+
+      Future<AssessmentTestApp> toQuestion9(
+        WidgetTester tester, {
+        FakeProgrammeRepository? programme,
+      }) async {
+        final AssessmentTestApp app = await open(
+          tester,
+          app: AssessmentTestApp(
+            programme: programme == null
+                ? null
+                : WellbeingProgrammeController(
+                    programme,
+                    canShowAlert: () => false,
+                  ),
+          ),
+          route: '/assessments/phq9',
+          tall: true,
+        );
+        await tapText(tester, 'Start');
+        for (int i = 0; i < 8; i += 1) {
+          await answer(tester, 'Not at all');
+        }
+        await answer(tester, 'Several days');
+        expect(find.text('Thank you for telling us'), findsOneWidget);
+        return app;
+      }
+
+      testWidgets('not in a programme: the usual footnote', (
+        WidgetTester tester,
+      ) async {
+        await toQuestion9(tester);
+        expect(find.text(usual), findsOneWidget);
+      });
+
+      testWidgets('in a programme: the officer will be asked to contact you', (
+        WidgetTester tester,
+      ) async {
+        await toQuestion9(
+          tester,
+          programme: FakeProgrammeRepository(membership: cityGeneral()),
+        );
+        expect(find.text(usual), findsNothing);
+        expect(
+          allText(tester),
+          contains(
+            'If you might act on these thoughts, call your local emergency '
+            'number now. MindMate is not an emergency service. Because you '
+            "are part of City General Hospital's wellbeing programme, "
+            'Dr. Sana Malik, your wellbeing officer, will be asked to contact '
+            'you today.',
+          ),
+        );
+      });
+
+      testWidgets(
+        '"Stop the check here" saves the result and asks the server',
+        (WidgetTester tester) async {
+          final FakeProgrammeRepository programme = FakeProgrammeRepository(
+            membership: cityGeneral(),
+          );
+          final AssessmentTestApp app = await toQuestion9(
+            tester,
+            programme: programme,
+          );
+
+          await tapText(tester, 'Stop the check here');
+          await go(tester);
+
+          expect(find.text('PAGE ${AppRoutes.support}'), findsOneWidget);
+          final AssessmentResult saved = app.service.stored.single;
+          expect(saved.assessmentId, 'phq9');
+          expect(saved.answers, <int>[0, 0, 0, 0, 0, 0, 0, 0, 1]);
+          expect(saved.total, 1);
+          expect(saved.bandId, 'minimal');
+          expect(saved.extraAnswers, isEmpty);
+          expect(programme.evaluateCalls, 1);
+        },
+      );
     });
 
     testWidgets('all "Not at all": no difficulty question, no support', (

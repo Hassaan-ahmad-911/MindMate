@@ -27,6 +27,9 @@ import '../mood_tracking/mood_history_viewmodel.dart';
 import '../mood_tracking/mood_insights_viewmodel.dart';
 import '../mood_tracking/mood_saved_viewmodel.dart';
 import '../mood_tracking/mood_tracking_viewmodel.dart';
+import '../programme/join_hospital_viewmodel.dart';
+import '../programme/wellbeing_programme_controller.dart';
+import '../programme/your_hospital_viewmodel.dart';
 import '../reports/checkins_writing_viewmodel.dart';
 import '../reports/reports_viewmodel.dart';
 import '../reports/share_summary_viewmodel.dart';
@@ -50,6 +53,10 @@ class UserSession {
   static void clearControllers() {
     for (final void Function() remove in _removers) {
       remove();
+    }
+    // The hospital programme lives as long as the app; forget the user.
+    if (Get.isRegistered<WellbeingProgrammeController>()) {
+      Get.find<WellbeingProgrammeController>().reset();
     }
     // Stop any meditation voice or background sound still playing.
     if (Get.isRegistered<MeditationAudioService>() &&
@@ -98,5 +105,7 @@ class UserSession {
     _remove<SettingsViewModel>,
     _remove<EditProfileViewModel>,
     _remove<DeleteAccountViewModel>,
+    _remove<JoinHospitalViewModel>,
+    _remove<YourHospitalViewModel>,
   ];
 }

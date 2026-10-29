@@ -132,6 +132,15 @@ class EmailCodeService {
     }
   }
 
+  /// A POST to the same server, for its other endpoints (the hospital
+  /// programme). Errors arrive as [EmailCodeException] with the server's
+  /// `error` code. Nothing is logged.
+  Future<Map<String, dynamic>> postJson(
+    String path,
+    Map<String, dynamic> body, {
+    String? idToken,
+  }) => _post(path, body, idToken: idToken);
+
   static CodeSent _codeSent(Map<String, dynamic> body) {
     if (body['alreadyVerified'] == true) {
       return const CodeSent(alreadyVerified: true);

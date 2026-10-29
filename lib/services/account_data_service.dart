@@ -16,6 +16,8 @@ abstract class AccountDataBackend {
     'gratitude',
     'checkins',
     'assessments',
+    // Written by the server; the owner may read and delete them.
+    'wellbeing_alerts',
   ];
 
   String currentUid();

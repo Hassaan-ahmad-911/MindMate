@@ -68,7 +68,7 @@ class AssessmentsHubViewModel extends GetxController {
     final DateTime? last = s.lastTaken;
     if (last == null) {
       return 'You have not taken it yet. ${s.def.items.length} questions, '
-          'about ${s.def.minutes} minutes.';
+          '${s.def.aboutMinutes}.';
     }
     return 'Last taken ${AssessmentMath.shortDate(last)}. '
         'Good time for another look.';

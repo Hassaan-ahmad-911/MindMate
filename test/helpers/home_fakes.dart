@@ -9,6 +9,7 @@ import 'package:mindmate/Models/mood_catalog.dart';
 import 'package:mindmate/Models/mood_model.dart';
 import 'package:mindmate/services/auth_service.dart';
 import 'package:mindmate/services/mood_firestore_service.dart';
+import 'package:mindmate/ui/programme/wellbeing_programme_controller.dart';
 import 'package:mindmate/viewmodels/home_viewmodel.dart';
 
 import 'meditation_fakes.dart';
@@ -81,6 +82,7 @@ HomeViewModel buildHome({
   DateTime Function()? clock,
   bool Function(String route)? routeExists,
   Duration bubbleDelay = const Duration(seconds: 3),
+  WellbeingProgrammeController? programme,
 }) {
   final HomeFakes f = fakes ?? HomeFakes();
   return HomeViewModel(
@@ -92,5 +94,6 @@ HomeViewModel buildHome({
     clock: clock,
     routeExists: routeExists ?? (String route) => true,
     bubbleDelay: bubbleDelay,
+    programme: programme,
   );
 }

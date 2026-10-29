@@ -12,6 +12,13 @@ class AppRoutes {
   /// email was never confirmed.
   static const String confirmEmail = '/confirm-email';
   static const String createProfile = '/create-profile';
+
+  /// "Join your hospital": the code that links the account to a hospital.
+  static const String joinHospital = '/join-hospital';
+
+  /// "Someone will reach out": shown once per wellbeing alert.
+  static const String wellbeingAlert = '/wellbeing-alert';
+  static const String settingsHospital = '/settings/hospital';
   static const String profileWork = '/profile-setup/work';
   static const String checkInIntro = '/check-in';
   static const String checkInQuestion = '/check-in/question';

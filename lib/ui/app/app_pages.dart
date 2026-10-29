@@ -7,6 +7,13 @@ import '../../Data/repositories/journal_repository.dart';
 import '../../Data/repositories/meditation_repository.dart';
 import '../../Data/repositories/profile_repository.dart';
 import '../../Data/repositories/mood_repository.dart';
+import '../../Data/repositories/wellbeing_programme_repository.dart';
+import '../programme/join_hospital_view.dart';
+import '../programme/join_hospital_viewmodel.dart';
+import '../programme/wellbeing_alert_view.dart';
+import '../programme/wellbeing_programme_controller.dart';
+import '../programme/your_hospital_view.dart';
+import '../programme/your_hospital_viewmodel.dart';
 import '../../services/keep_awake_service.dart';
 import '../../services/meditation_audio_service.dart';
 import '../../services/meditation_voice_service.dart';
@@ -201,8 +208,41 @@ class AppPages {
         );
       }),
     ),
-    // The two-step profile setup after sign-up. Both screens share the one
-    // ProfileViewModel created here.
+    // The hospital programme: joining (setup step 1 of 3), the alert screen
+    // and "Your hospital" in Settings.
+    GetPage(
+      name: AppRoutes.joinHospital,
+      page: () => const JoinHospitalView(),
+      binding: BindingsBuilder(() {
+        Get.put<JoinHospitalViewModel>(
+          JoinHospitalViewModel(
+            Get.find<WellbeingProgrammeRepository>(),
+            Get.find<ProfileRepository>(),
+            Get.find<AuthRepository>(),
+            programme: Get.find<WellbeingProgrammeController>(),
+          ),
+        );
+      }),
+    ),
+    GetPage(
+      name: AppRoutes.wellbeingAlert,
+      page: () => const WellbeingAlertView(),
+    ),
+    GetPage(
+      name: AppRoutes.settingsHospital,
+      page: () => const YourHospitalView(),
+      binding: BindingsBuilder(() {
+        Get.put<YourHospitalViewModel>(
+          YourHospitalViewModel(
+            Get.find<WellbeingProgrammeController>(),
+            Get.find<WellbeingProgrammeRepository>(),
+            Get.find<MoodRepository>(),
+          ),
+        );
+      }),
+    ),
+    // The profile setup after joining (steps 2 and 3). Both screens share
+    // the one ProfileViewModel created here.
     GetPage(
       name: AppRoutes.createProfile,
       page: () => const ProfileAboutView(),
@@ -226,6 +266,7 @@ class AppPages {
           CheckInViewModel(
             Get.find<ProfileRepository>(),
             Get.find<MeditationRepository>(),
+            assessments: Get.find<AssessmentRepository>(),
           ),
         );
       }),
@@ -557,6 +598,9 @@ class AppPages {
                   ? Get.find<MeditationRepository>()
                   : null,
               share: Get.find<ShareService>(),
+              programme: Get.isRegistered<WellbeingProgrammeController>()
+                  ? Get.find<WellbeingProgrammeController>()
+                  : null,
             ),
           );
         }),

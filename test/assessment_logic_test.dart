@@ -28,13 +28,14 @@ void main() {
       AssessmentScorer.score(def(id), answers);
 
   group('The content file', () {
-    test('parses all six questionnaires with the right item counts', () {
+    test('parses all seven questionnaires with the right item counts', () {
       expect(
         <String, int>{
           for (final AssessmentDefinition d in content.assessments)
             d.id: d.items.length,
         },
         <String, int>{
+          'phq4': 4,
           'phq9': 9,
           'gad7': 7,
           'cbi': 19,
@@ -44,7 +45,7 @@ void main() {
         },
       );
       expect(content.hubGroups, hasLength(3));
-      expect(content.suggestOrder.first, 'cbi');
+      expect(content.suggestOrder.first, 'phq4');
       expect(content.item9.continueLabel, "I'm safe, continue");
     });
 
@@ -288,7 +289,10 @@ void main() {
       final AssessmentSuggestion? s = AssessmentSuggestion.pick(
         all: content.assessments,
         order: content.suggestOrder,
-        latest: <String, AssessmentResult>{'cbi': taken('cbi', now)},
+        latest: <String, AssessmentResult>{
+          'phq4': taken('phq4', now),
+          'cbi': taken('cbi', now),
+        },
         now: now,
       );
       expect(s?.def.id, 'phq9');

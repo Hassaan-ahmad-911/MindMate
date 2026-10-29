@@ -8,9 +8,11 @@ import '../../Models/assessment_definition.dart';
 import '../../Models/assessment_result.dart';
 import '../../Models/assessment_rules.dart';
 import '../../Models/assessment_scorer.dart';
+import '../../Models/hospital_programme.dart';
 import '../../Models/meditation_models.dart';
 import '../../services/share_service.dart';
 import '../app/app_routes.dart';
+import '../programme/wellbeing_programme_controller.dart';
 import '../shared/app_feedback.dart';
 
 enum AssessmentStep { loading, error, intro, question, safety, result }
@@ -29,10 +31,12 @@ class AssessmentFlowViewModel extends GetxController {
     MeditationRepository? meditation,
     ShareService? share,
     DateTime Function()? clock,
+    WellbeingProgrammeController? programme,
   }) : _savedResult = savedResult,
        _meditation = meditation,
        _share = share,
-       _clock = clock ?? DateTime.now;
+       _clock = clock ?? DateTime.now,
+       _programme = programme;
 
   final AssessmentRepository _repository;
   final String assessmentId;
@@ -40,6 +44,11 @@ class AssessmentFlowViewModel extends GetxController {
   final MeditationRepository? _meditation;
   final ShareService? _share;
   final DateTime Function() _clock;
+  final WellbeingProgrammeController? _programme;
+
+  /// The user's hospital, or null for someone not in a programme. Changes
+  /// the question 9 footnote and what "Stop the check here" does.
+  final Rxn<HospitalMembership> hospital = Rxn<HospitalMembership>();
 
   final Rx<AssessmentStep> step = AssessmentStep.loading.obs;
 
@@ -87,6 +96,7 @@ class AssessmentFlowViewModel extends GetxController {
       step.value = AssessmentStep.error;
       return;
     }
+    unawaited(_loadHospital());
 
     final AssessmentResult? saved = _savedResult;
     if (saved != null) {
@@ -101,6 +111,21 @@ class AssessmentFlowViewModel extends GetxController {
     _reset();
     step.value = AssessmentStep.intro;
     unawaited(_loadHistory());
+  }
+
+  Future<void> _loadHospital() async {
+    try {
+      hospital.value = await _programme?.loadMembership();
+    } catch (_) {
+      hospital.value = null;
+    }
+  }
+
+  /// The footnote for someone in a hospital ([lead], then [bold]), or null
+  /// for everyone else, who see the content file's footnote.
+  ({String lead, String bold})? get programmeFootnote {
+    final HospitalMembership? m = hospital.value;
+    return m == null ? null : ProgrammeWording.item9Footnote(m);
   }
 
   Future<void> _loadHistory() async {
@@ -249,11 +274,35 @@ class AssessmentFlowViewModel extends GetxController {
     _advance();
   }
 
-  /// "Stop the check here": saves nothing and opens the support page. The
-  /// hub shows its support banner for the rest of this session.
+  /// "Stop the check here": opens the support page. The hub shows its
+  /// support banner for the rest of this session.
+  ///
+  /// Someone not in a hospital: nothing is saved. Someone in a hospital: the
+  /// nine answers are saved as a normal result (the unscored difficulty
+  /// question left empty), so the server is asked to evaluate and the
+  /// officer is emailed today, as the footnote said.
   void stopHere() {
     _repository.markItem9Positive();
+    if (hospital.value != null) {
+      unawaited(_saveStopped());
+    }
     Get.offNamed<void>(AppRoutes.support);
+  }
+
+  Future<void> _saveStopped() async {
+    final AssessmentResult built = AssessmentResult.fromAttempt(
+      def: def,
+      contentVersion: _contentVersion,
+      answers: answers.map((int? a) => a ?? 0).toList(),
+      startedAt: _startedAt,
+      completedAt: _clock(),
+    );
+    try {
+      // The repository then asks the server to evaluate.
+      await _repository.saveResult(built);
+    } catch (_) {
+      // Offline: Firestore keeps the write and sends it later.
+    }
   }
 
   void openSupport() => Get.toNamed<void>(AppRoutes.support);
@@ -330,6 +379,19 @@ class AssessmentFlowViewModel extends GetxController {
       : AssessmentMath.change(result.value!, previous.value);
 
   String? get nextStep => AssessmentScorer.nextStep(def, score);
+
+  /// PHQ-4: the fuller check-ins its parts suggest (PHQ-9, GAD-7, or both).
+  List<FollowUpRule> get followUps {
+    final AssessmentResult? current = result.value;
+    return current == null
+        ? const <FollowUpRule>[]
+        : def.followUpsFor(current.answers);
+  }
+
+  /// "Take it now": that check-in in place of this result.
+  void takeFollowUp(FollowUpRule rule) {
+    Get.offNamed<void>('${AppRoutes.assessments}/${rule.assessmentId}');
+  }
 
   bool get item9Positive => score.item9Positive;
 

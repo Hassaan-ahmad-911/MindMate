@@ -95,7 +95,9 @@ class AssessmentHistoryViewModel extends GetxController {
     try {
       final List<AssessmentResult> found = await _repository.getHistory(id);
       InitialWho5? first;
-      if (id == 'who5') {
+      // Newer setups also save the first check-in's WHO-5 as a result; only
+      // older accounts need it read from the check-in itself.
+      if (id == 'who5' && !found.any((AssessmentResult r) => r.fromSetup)) {
         try {
           first = await _repository.getInitialWho5();
         } catch (_) {
@@ -125,7 +127,11 @@ class AssessmentHistoryViewModel extends GetxController {
       for (final AssessmentResult r
           in results.take(chartLimit).toList().reversed)
         if (r.headline != null)
-          HistoryPoint(value: r.headline!, date: r.completedAt),
+          HistoryPoint(
+            value: r.headline!,
+            date: r.completedAt,
+            firstCheckIn: r.fromSetup,
+          ),
     ];
     final InitialWho5? first = firstCheckIn.value;
     if (first != null) {

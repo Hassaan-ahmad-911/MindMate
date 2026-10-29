@@ -46,6 +46,11 @@ class ProfileRepository {
     return _service.profileExists();
   }
 
+  /// Whether the user has a profile and joined a hospital (one read).
+  Future<({bool hasProfile, bool hasOrg})> setupState() {
+    return _service.setupState();
+  }
+
   UserProfile signedInUserDefaults() {
     return _service.signedInUserDefaults();
   }

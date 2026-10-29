@@ -114,6 +114,23 @@ class SettingsView extends GetView<SettingsViewModel> {
                   ),
                   const SizedBox(height: 16),
                   _ProfileCard(controller: vm),
+                  if (vm.hospital != null)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 14),
+                      child: SettingsGroup(
+                        children: <Widget>[
+                          SettingsRow(
+                            icon: Icons.apartment_rounded,
+                            style: TileStyle.blue,
+                            title: 'Your hospital',
+                            line: vm.hospital!.name.isEmpty
+                                ? 'Staff wellbeing programme'
+                                : vm.hospital!.name,
+                            onTap: vm.openHospital,
+                          ),
+                        ],
+                      ),
+                    ),
                   SettingsGroup(
                     label: 'Your app',
                     children: <Widget>[

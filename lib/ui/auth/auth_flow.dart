@@ -25,11 +25,14 @@ class AuthFlow {
   final AuthRepository _auth;
   final ProfileRepository _profiles;
 
-  /// "Confirm your email" for an email account that never confirmed it; then
-  /// Home for someone with a profile, the profile setup for someone without.
-  /// If the profile check itself fails, Home is safer than sending an
-  /// existing user back through the setup.
-  Future<String> routeAfterSignIn() async {
+  /// "Confirm your email" for an email account that never confirmed it;
+  /// "Join your hospital" for someone not in one; then Home for someone with
+  /// a profile, the profile setup for someone without (see `AppRouteGate`).
+  /// If the check itself fails, Home is safer than sending an existing user
+  /// back through the setup.
+  Future<String> routeAfterSignIn() async => (await _check()).route;
+
+  Future<({String route, bool hasProfile})> _check() async {
     bool needsConfirmation = false;
     try {
       needsConfirmation = await _auth.needsEmailConfirmation();
@@ -37,31 +40,44 @@ class AuthFlow {
       needsConfirmation = false;
     }
     if (needsConfirmation) {
-      return PostAuthRouting.routeFor(
+      return (
+        route: PostAuthRouting.routeFor(
+          hasProfile: false,
+          needsEmailConfirmation: true,
+        ),
         hasProfile: false,
-        needsEmailConfirmation: true,
       );
     }
 
     bool hasProfile = true;
+    bool hasOrg = true;
     try {
-      hasProfile = await _profiles.profileExists();
+      final ({bool hasProfile, bool hasOrg}) state = await _profiles
+          .setupState();
+      hasProfile = state.hasProfile;
+      hasOrg = state.hasOrg;
     } catch (_) {
       hasProfile = true;
+      hasOrg = true;
     }
-    return PostAuthRouting.routeFor(hasProfile: hasProfile);
+    return (
+      route: PostAuthRouting.routeFor(hasProfile: hasProfile, hasOrg: hasOrg),
+      hasProfile: hasProfile,
+    );
   }
 
-  /// After a Google sign-in. Someone with a profile carries on as before. A
-  /// new account must have agreed to the self-support notice: either it was
-  /// ticked on Create account ([consentGiven]), was agreed earlier, or
-  /// [askConsent] gets a yes. Without it the new account is signed out again.
+  /// After a Google sign-in. Someone with a profile carries on as before
+  /// (to Home, or to "Join your hospital" once). A new account must have
+  /// agreed to the self-support notice: either it was ticked on Create
+  /// account ([consentGiven]), was agreed earlier, or [askConsent] gets a
+  /// yes. Without it the new account is signed out again.
   Future<({GoogleOutcome outcome, String route})> afterGoogle({
     bool consentGiven = false,
     Future<bool> Function()? askConsent,
   }) async {
-    final String route = await routeAfterSignIn();
-    if (route == AppRoutes.home) {
+    final ({String route, bool hasProfile}) check = await _check();
+    final String route = check.route;
+    if (check.hasProfile) {
       return (outcome: GoogleOutcome.continued, route: route);
     }
 

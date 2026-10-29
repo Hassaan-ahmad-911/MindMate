@@ -1,6 +1,13 @@
 import 'package:get/get.dart';
 
+import '../Data/repositories/assessment_repository.dart';
 import '../Data/repositories/auth_repository.dart';
+import '../Data/repositories/wellbeing_programme_repository.dart';
+import '../services/programme_firestore_service.dart';
+import '../services/programme_local_store.dart';
+import '../services/wellbeing_programme_service.dart';
+import '../ui/assessments/assessment_binding.dart';
+import '../ui/programme/wellbeing_programme_controller.dart';
 import '../Data/repositories/break_repository.dart';
 import '../Data/repositories/gratitude_repository.dart';
 import '../Data/repositories/home_repository.dart';
@@ -50,7 +57,10 @@ class InitialBinding extends Bindings {
     Get.put<HomeRepository>(HomeRepository(), permanent: true);
     Get.put<MoodFirestoreService>(MoodFirestoreService(), permanent: true);
     Get.put<MoodRepository>(
-      MoodRepository(Get.find<MoodFirestoreService>()),
+      MoodRepository(
+        Get.find<MoodFirestoreService>(),
+        onSaved: notifyWellbeingProgramme,
+      ),
       permanent: true,
     );
     Get.put<SettingsFirestoreService>(
@@ -82,6 +92,25 @@ class InitialBinding extends Bindings {
     Get.put<GratitudeService>(GratitudeService(), permanent: true);
     Get.put<GratitudeRepository>(
       GratitudeRepository(Get.find<GratitudeService>()),
+      permanent: true,
+    );
+    // The hospital programme: Home, Settings and the save hooks use it, so
+    // it lives as long as the app. The check-in services are lazy.
+    AssessmentBinding().dependencies();
+    Get.put<WellbeingProgrammeRepository>(
+      WellbeingProgrammeRepository(
+        WellbeingProgrammeService(
+          Get.find<EmailCodeService>(),
+          idToken: Get.find<AuthService>().idToken,
+        ),
+        ProgrammeFirestoreService(),
+        ProgrammeLocalStore(),
+        assessments: Get.find<AssessmentRepository>(),
+      ),
+      permanent: true,
+    );
+    Get.put<WellbeingProgrammeController>(
+      WellbeingProgrammeController(Get.find<WellbeingProgrammeRepository>()),
       permanent: true,
     );
     // Created the first time a practice needs them.

@@ -2,8 +2,11 @@ import 'dart:async';
 
 import 'package:get/get.dart';
 
+import '../../Data/repositories/assessment_repository.dart';
 import '../../Data/repositories/meditation_repository.dart';
 import '../../Data/repositories/profile_repository.dart';
+import '../../Models/assessment_definition.dart';
+import '../../Models/assessment_result.dart';
 import '../../Models/check_in_planner.dart';
 import '../../Models/check_in_questions.dart';
 import '../../Models/check_in_result.dart';
@@ -35,10 +38,20 @@ class StartingPoint {
 /// "All set" screen. It is created by the intro route and shared by the
 /// screens after it.
 class CheckInViewModel extends GetxController {
-  CheckInViewModel(this._profileRepository, this._meditationRepository);
+  CheckInViewModel(
+    this._profileRepository,
+    this._meditationRepository, {
+    AssessmentRepository? assessments,
+    DateTime Function()? clock,
+  }) : _assessments = assessments,
+       _clock = clock ?? DateTime.now;
 
   final ProfileRepository _profileRepository;
   final MeditationRepository _meditationRepository;
+
+  /// Saves the WHO-5 answers as a normal Wellbeing result too.
+  final AssessmentRepository? _assessments;
+  final DateTime Function() _clock;
 
   final List<CheckInQuestion> questions = CheckInQuestions.all;
 
@@ -181,8 +194,40 @@ class CheckInViewModel extends GetxController {
     // Not awaited: without a connection a write only finishes once the phone
     // is back online.
     unawaited(_save(result));
+    unawaited(_saveWho5(result));
     await _showAllSet(plan, reminder: result.reminderPreference);
     Get.offNamed(AppRoutes.checkInDone);
+  }
+
+  /// The first check-in's WHO-5 counts as the first Wellbeing check-in:
+  /// when all five were answered, it is also saved at
+  /// `users/{uid}/assessments` like any WHO-5, so the schedule and the
+  /// hospital programme see it. Skipped answers are never filled in.
+  Future<void> _saveWho5(CheckInResult result) async {
+    final AssessmentRepository? assessments = _assessments;
+    if (assessments == null || result.who5Raw == null) {
+      return;
+    }
+    try {
+      final AssessmentContent content = await assessments.loadContent();
+      final AssessmentDefinition? who5 = content.byId('who5');
+      if (who5 == null || who5.items.length != result.who5Answers.length) {
+        return;
+      }
+      final DateTime now = _clock();
+      await assessments.saveResult(
+        AssessmentResult.fromAttempt(
+          def: who5,
+          contentVersion: content.version,
+          answers: result.who5Answers.map((int? a) => a!).toList(),
+          startedAt: now,
+          completedAt: now,
+          source: AssessmentResult.setupSource,
+        ),
+      );
+    } on Object {
+      // The check-in itself is saved; Wellbeing is simply due as usual.
+    }
   }
 
   /// "Do this later": no answers are stored, and the check-in stays pending.

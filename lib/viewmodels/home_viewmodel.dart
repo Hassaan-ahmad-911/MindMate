@@ -8,6 +8,7 @@ import '../Data/repositories/meditation_repository.dart';
 import '../Data/repositories/mood_repository.dart';
 import '../Data/repositories/profile_repository.dart';
 import '../Models/home_dashboard.dart';
+import '../Models/hospital_programme.dart';
 import '../Models/meditation_log_entry.dart';
 import '../Models/meditation_models.dart';
 import '../Models/meditation_stats.dart';
@@ -15,8 +16,10 @@ import '../Models/meditation_suggester.dart';
 import '../Models/mood_model.dart';
 import '../Models/mood_stats.dart';
 import '../Models/profile_options.dart';
+import '../Models/programme_schedule.dart';
 import '../Models/user_profile.dart';
 import '../ui/app/app_routes.dart';
+import '../ui/programme/wellbeing_programme_controller.dart';
 import '../ui/shared/app_feedback.dart';
 
 /// How far one section of the dashboard has got. Each section loads, and
@@ -36,8 +39,11 @@ class HomeViewModel extends GetxController {
     DateTime Function()? clock,
     bool Function(String route)? routeExists,
     this.bubbleDelay = const Duration(seconds: 3),
+    WellbeingProgrammeController? programme,
   }) : _clock = clock ?? DateTime.now,
-       _routeExists = routeExists ?? _isRegistered;
+       _routeExists = routeExists ?? _isRegistered,
+       _programme = programme,
+       _programmeLoading = programme != null;
 
   final AuthRepository _authRepository;
   final MoodRepository _moodRepository;
@@ -46,6 +52,9 @@ class HomeViewModel extends GetxController {
   final HomeRepository _homeRepository;
   final DateTime Function() _clock;
   final bool Function(String route) _routeExists;
+
+  /// The hospital programme; null in tests that do not use it.
+  final WellbeingProgrammeController? _programme;
 
   /// How long after the page appears the speech bubble pops in.
   final Duration bubbleDelay;
@@ -81,6 +90,11 @@ class HomeViewModel extends GetxController {
   /// The speech bubble over the robot, or null for none.
   final RxnString bubbleText = RxnString();
 
+  /// For users in a hospital: what today's check-ins are worked out from.
+  /// Null for everyone else, who keep the original mood card.
+  final Rxn<ProgrammeStatus> programmeStatus = Rxn<ProgrammeStatus>();
+  bool _programmeLoading;
+
   /// True when the page plays its entrance animations: the first time it
   /// appears in an app launch, with reduce-motion off.
   bool animateIntro = false;
@@ -94,6 +108,11 @@ class HomeViewModel extends GetxController {
   void onInit() {
     super.onInit();
     unawaited(loadAll());
+    // The once-a-day evaluation, and an alert not shown yet.
+    final WellbeingProgrammeController? programme = _programme;
+    if (programme != null) {
+      unawaited(programme.homeOpened());
+    }
   }
 
   // ---------------------------------------------------------------------------
@@ -110,6 +129,7 @@ class HomeViewModel extends GetxController {
       _loadProfile(),
       _loadMoods(),
       _loadMeditation(),
+      _loadProgramme(),
     ]);
   }
 
@@ -120,13 +140,18 @@ class HomeViewModel extends GetxController {
       _loadProfile(),
       _loadMoods(),
       _loadMeditation(),
+      _loadProgramme(),
     ]);
   }
 
   /// When the user comes back from another screen: the mood card and the
   /// stats are brought up to date without any skeleton.
   Future<void> refreshQuiet() async {
-    await Future.wait(<Future<void>>[_loadMoods(), _loadMeditation()]);
+    await Future.wait(<Future<void>>[
+      _loadMoods(),
+      _loadMeditation(),
+      _loadProgramme(),
+    ]);
   }
 
   Future<void> retryProfile() async {
@@ -193,6 +218,21 @@ class HomeViewModel extends GetxController {
       if (meditationStatus.value != SectionStatus.ready) {
         meditationStatus.value = SectionStatus.failed;
       }
+    }
+  }
+
+  Future<void> _loadProgramme() async {
+    final WellbeingProgrammeController? programme = _programme;
+    if (programme == null) {
+      return;
+    }
+    try {
+      programmeStatus.value = await programme.loadStatus();
+    } catch (_) {
+      // What is on screen stays; users not in a hospital see the mood card.
+    } finally {
+      _programmeLoading = false;
+      unawaited(_showBubbleIfDue());
     }
   }
 
@@ -293,6 +333,63 @@ class HomeViewModel extends GetxController {
       MeditationStats.minutesThisWeek(meditationLogs, now: _clock());
 
   String get suggestionHeading => HomeText.suggestionHeading(_clock());
+
+  // ---------------------------------------------------------------------------
+  // Today's check-ins (users in a hospital).
+  // ---------------------------------------------------------------------------
+
+  /// Mood plus every check-in due today, or null for someone not in a
+  /// hospital (they keep the original mood card).
+  List<ScheduleRow>? get todayCheckIns {
+    final ProgrammeStatus? status = programmeStatus.value;
+    if (status == null) {
+      return null;
+    }
+    return ProgrammeSchedule.today(
+      config: status.config,
+      joinedAt: status.membership.joinedAt,
+      lastDone: status.lastDone,
+      lastMood: moodHistory.isEmpty ? null : moodHistory.first.date,
+      now: _clock(),
+    );
+  }
+
+  /// The second line under a row: "Logged at 19:40 · Calm", "4 questions ·
+  /// due today".
+  String checkInSubtitle(ScheduleRow row) {
+    if (row.isMood) {
+      final MoodModel? mood = _latestMoodToday;
+      if (row.done && mood != null) {
+        final String time =
+            '${mood.date.hour.toString().padLeft(2, '0')}:'
+            '${mood.date.minute.toString().padLeft(2, '0')}';
+        return mood.mood.trim().isEmpty
+            ? 'Logged at $time'
+            : 'Logged at $time · ${mood.mood.trim()}';
+      }
+      return 'How are you feeling?';
+    }
+    if (row.done) {
+      return 'Done today';
+    }
+    final Map<String, int> counts =
+        programmeStatus.value?.questionCounts ?? const <String, int>{};
+    int questions = 0;
+    for (final String id in row.assessmentIds) {
+      questions += counts[id] ?? 0;
+    }
+    return questions > 0 ? '$questions questions · due today' : 'Due today';
+  }
+
+  /// "Start": the mood logging flow, or that check-in directly.
+  void startCheckIn(ScheduleRow row) {
+    final String? id = row.startId;
+    if (id == null) {
+      logMood();
+    } else {
+      unawaited(open('${AppRoutes.assessments}/$id'));
+    }
+  }
 
   // ---------------------------------------------------------------------------
   // Explore.
@@ -450,18 +547,25 @@ class HomeViewModel extends GetxController {
     if (!_bubbleDue || _bubbleDone) {
       return;
     }
-    // Wait for the moods, so "no mood today" is never guessed.
-    if (moodStatus.value == SectionStatus.loading) {
+    // Wait for the moods, so "no mood today" is never guessed, and for the
+    // hospital's check-ins.
+    if (moodStatus.value == SectionStatus.loading || _programmeLoading) {
       return;
     }
     _bubbleDone = true;
     final bool firstOpen = await (_firstOpenToday ?? Future<bool>.value(false));
-    bubbleText.value = HomeBubble.pick(
-      streak: moodStreak,
-      moodLoggedToday: moodLoggedToday,
-      dayPart: dayPart,
-      firstOpenToday: firstOpen,
-    );
+    final List<ScheduleRow>? checkIns = todayCheckIns;
+    final String? checkInsLeft = checkIns == null
+        ? null
+        : ProgrammeSchedule.bubble(checkIns);
+    bubbleText.value =
+        checkInsLeft ??
+        HomeBubble.pick(
+          streak: moodStreak,
+          moodLoggedToday: moodLoggedToday,
+          dayPart: dayPart,
+          firstOpenToday: firstOpen,
+        );
   }
 
   @override

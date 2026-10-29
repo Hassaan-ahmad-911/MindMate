@@ -19,7 +19,11 @@ class AssessmentResult {
     this.areaBands,
     required this.startedAt,
     required this.completedAt,
+    this.source,
   });
+
+  /// [source] of the WHO-5 saved from the first check-in in profile setup.
+  static const String setupSource = 'setup';
 
   /// Builds the result of an attempt from its answers.
   factory AssessmentResult.fromAttempt({
@@ -29,6 +33,7 @@ class AssessmentResult {
     Map<String, int> extraAnswers = const <String, int>{},
     required DateTime startedAt,
     required DateTime completedAt,
+    String? source,
   }) {
     final AssessmentScore score = AssessmentScorer.score(def, answers);
     return AssessmentResult(
@@ -43,6 +48,7 @@ class AssessmentResult {
       areaBands: score.areaBands,
       startedAt: startedAt,
       completedAt: completedAt,
+      source: source,
     );
   }
 
@@ -62,6 +68,11 @@ class AssessmentResult {
   final Map<String, String>? areaBands;
   final DateTime startedAt;
   final DateTime completedAt;
+
+  /// Where it was taken, when not in the check-ins module: [setupSource].
+  final String? source;
+
+  bool get fromSetup => source == setupSource;
 
   /// Re-scores the stored answers (for the result screen of a saved result).
   AssessmentScore scoreWith(AssessmentDefinition def) =>
@@ -114,6 +125,7 @@ class AssessmentResult {
       areaBands: areaBands,
       startedAt: startedAt,
       completedAt: completedAt,
+      source: source,
     );
   }
 
@@ -130,6 +142,7 @@ class AssessmentResult {
       'areaBands': areaBands,
       'startedAt': Timestamp.fromDate(startedAt),
       'completedAt': Timestamp.fromDate(completedAt),
+      'source': ?source,
     };
   }
 
@@ -156,6 +169,7 @@ class AssessmentResult {
       areaBands: _strings(map['areaBands']),
       startedAt: _date(map['startedAt']) ?? completed,
       completedAt: completed,
+      source: map['source'] as String?,
     );
   }
 

@@ -15,6 +15,7 @@ import 'package:mindmate/ui/assessments/assessment_history_view.dart';
 import 'package:mindmate/ui/assessments/assessment_history_viewmodel.dart';
 import 'package:mindmate/ui/assessments/assessments_hub_view.dart';
 import 'package:mindmate/ui/assessments/assessments_hub_viewmodel.dart';
+import 'package:mindmate/ui/programme/wellbeing_programme_controller.dart';
 import 'package:mindmate/ui/shared/mindmate_theme.dart';
 
 import 'meditation_fakes.dart';
@@ -101,15 +102,21 @@ class AssessmentTestApp {
   AssessmentTestApp({
     FakeAssessmentService? service,
     DateTime Function()? clock,
+    this.programme,
   }) : service = service ?? FakeAssessmentService(),
        clock = clock ?? (() => DateTime(2026, 10, 8, 9));
 
   final FakeAssessmentService service;
   final DateTime Function() clock;
   final FakeShare share = FakeShare();
+
+  /// The hospital programme, for tests of hospital staff; saves then ask it
+  /// to evaluate, as in the app.
+  final WellbeingProgrammeController? programme;
   late final AssessmentRepository repository = AssessmentRepository(
     service,
     AssessmentContentService(loader: () async => assessmentContentText()),
+    onSaved: programme?.dataSaved,
   );
 
   static const List<String> placeholders = <String>[
@@ -174,6 +181,7 @@ class AssessmentTestApp {
                 meditation: meditation,
                 share: share,
                 clock: clock,
+                programme: programme,
               ),
             );
           }),

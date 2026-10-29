@@ -28,6 +28,8 @@ class AssessmentVisuals {
         return Icons.wb_sunny_outlined;
       case 'building':
         return Icons.apartment_rounded;
+      case 'clipboard':
+        return Icons.assignment_outlined;
       default:
         return Icons.checklist_rounded;
     }
@@ -603,6 +605,57 @@ class NextStepCard extends StatelessWidget {
                     label: 'Support and helplines',
                     onTap: onSupport,
                   ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// PHQ-4: a fuller check-in its answers suggest, with "Take it now".
+class FollowUpCard extends StatelessWidget {
+  const FollowUpCard({super.key, required this.text, required this.onTake});
+
+  final String text;
+  final VoidCallback onTake;
+
+  @override
+  Widget build(BuildContext context) {
+    return AppCard(
+      radius: 22,
+      padding: const EdgeInsets.fromLTRB(16, 16, 16, 6),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Container(
+            width: 44,
+            height: 44,
+            decoration: BoxDecoration(
+              gradient: AppBlends.lightBlue,
+              borderRadius: BorderRadius.circular(13),
+            ),
+            child: const Icon(
+              Icons.assignment_outlined,
+              color: AppColors.headerBlue,
+            ),
+          ),
+          const SizedBox(width: 14),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                const MoodSectionLabel('Suggested next'),
+                const SizedBox(height: 4),
+                Text(
+                  text,
+                  style: AppFonts.body(size: 15, color: context.mm.textBody),
+                ),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: MoodTextLink(label: 'Take it now', onTap: onTake),
                 ),
               ],
             ),

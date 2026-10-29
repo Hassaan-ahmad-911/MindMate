@@ -5,7 +5,14 @@ import '../../services/assessment_firestore_service.dart';
 
 /// The check-in content file and the user's completed check-ins.
 class AssessmentRepository {
-  AssessmentRepository(this._service, this._contentService);
+  AssessmentRepository(
+    this._service,
+    this._contentService, {
+    void Function()? onSaved,
+  }) : _onSaved = onSaved;
+
+  /// Called after a result is saved (the hospital programme's evaluation).
+  final void Function()? _onSaved;
 
   /// The hub reads this many of the newest results and keeps the latest of
   /// each questionnaire.
@@ -22,8 +29,11 @@ class AssessmentRepository {
 
   AssessmentContent? get content => _contentService.content;
 
-  Future<AssessmentResult> saveResult(AssessmentResult result) =>
-      _service.saveResult(result);
+  Future<AssessmentResult> saveResult(AssessmentResult result) async {
+    final AssessmentResult saved = await _service.saveResult(result);
+    _onSaved?.call();
+    return saved;
+  }
 
   /// The latest result of each questionnaire, by id.
   Future<Map<String, AssessmentResult>> getLatestById() async {

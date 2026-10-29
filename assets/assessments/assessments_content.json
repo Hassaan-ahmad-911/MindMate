@@ -1,5 +1,5 @@
 {
-  "version": 1,
+  "version": 2,
   "notes": "Content for MindMate check-ins. Load from assets/assessments/assessments_content.json. Question wording for PHQ-9, GAD-7, PSS-10, WHO-5 and CBI is the published wording and must not be shortened or reworded. The workplace questionnaire's items stay as they are in the app today and are moved into this file by the coding model. heavyBands lists the ranges whose pill uses the blue blend with white text.",
 
   "answerSets": {
@@ -54,6 +54,39 @@
   },
 
   "assessments": [
+    {
+      "id": "phq4",
+      "name": "3-day check",
+      "scale": "PHQ-4",
+      "group": "mood",
+      "icon": "clipboard",
+      "minutes": 1,
+      "retakeDays": 3,
+      "lowerIsBetter": true,
+      "intro": "Four quick questions about the last 2 weeks.",
+      "about": "The PHQ-4 is a very short screening questionnaire for anxiety and low mood. It is not a diagnosis.",
+      "stem": "Over the last 2 weeks, how often have you been bothered by the following problems?",
+      "answerSet": "phq_freq",
+      "items": [
+        { "n": 1, "part": "gad2", "text": "Feeling nervous, anxious, or on edge" },
+        { "n": 2, "part": "gad2", "text": "Not being able to stop or control worrying" },
+        { "n": 3, "part": "phq2", "text": "Little interest or pleasure in doing things" },
+        { "n": 4, "part": "phq2", "text": "Feeling down, depressed, or hopeless" }
+      ],
+      "scoring": { "method": "sum", "max": 12, "parts": { "gad2": [1, 2], "phq2": [3, 4] } },
+      "bands": [
+        { "id": "normal", "label": "Normal", "min": 0, "max": 2, "line": "Few signs of anxiety or low mood right now." },
+        { "id": "mild", "label": "Mild", "min": 3, "max": 5, "line": "Some signs of anxiety or low mood." },
+        { "id": "moderate", "label": "Moderate", "min": 6, "max": 8, "line": "Anxiety or low mood may be getting in the way of daily life." },
+        { "id": "severe", "label": "Severe", "min": 9, "max": 12, "line": "Anxiety or low mood seems to be affecting most of your days." }
+      ],
+      "heavyBands": ["moderate", "severe"],
+      "followUp": [
+        { "part": "phq2", "from": 3, "assessmentId": "phq9", "text": "Your answers suggest taking the full low mood check now. It has 9 questions." },
+        { "part": "gad2", "from": 3, "assessmentId": "gad7", "text": "Your answers suggest taking the full worry check now. It has 7 questions." }
+      ],
+      "practice": { "from": 6, "id": "three_step_pause" }
+    },
     {
       "id": "phq9",
       "name": "Low mood",
@@ -331,7 +364,7 @@
     { "id": "work", "label": "Work and stress" },
     { "id": "wellbeing", "label": "Wellbeing" }
   ],
-  "suggestOrder": ["cbi", "phq9", "who5", "gad7", "pss10", "workplace"],
+  "suggestOrder": ["phq4", "cbi", "phq9", "who5", "gad7", "pss10", "workplace"],
 
   "safety": {
     "item9": {
@@ -348,5 +381,21 @@
     }
   },
 
-  "disclaimer": "These are screening questionnaires. They cannot diagnose anything, but they can help you notice changes and decide when to talk to someone."
+  "disclaimer": "These are screening questionnaires. They cannot diagnose anything, but they can help you notice changes and decide when to talk to someone.",
+
+  "programme": {
+    "notes": "Required schedule for staff in a hospital wellbeing programme. Days = how long after the last completed one it is due again.",
+    "mood": { "everyDays": 1 },
+    "required": [
+      { "assessmentId": "phq4", "everyDays": 3, "label": "3-day check" },
+      { "assessmentId": "who5", "everyDays": 7, "label": "Wellbeing" },
+      { "assessmentId": "phq9", "everyDays": 14, "label": "Low mood" },
+      { "assessmentId": "gad7", "everyDays": 14, "label": "Worry and anxiety" },
+      { "assessmentId": "cbi", "everyDays": 30, "label": "Burnout" },
+      { "assessmentId": "pss10", "everyDays": 30, "label": "Stress" }
+    ],
+    "optional": [
+      { "assessmentId": "workplace", "everyDays": 90 }
+    ]
+  }
 }

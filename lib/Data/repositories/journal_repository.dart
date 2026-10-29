@@ -7,9 +7,18 @@ import '../../services/journal_firestore_service.dart';
 
 /// Journal entries, the journal content file and the one draft.
 class JournalRepository {
-  JournalRepository(this._service, this._contentService, this._drafts);
+  JournalRepository(
+    this._service,
+    this._contentService,
+    this._drafts, {
+    void Function()? onSaved,
+  }) : _onSaved = onSaved;
 
   static const int pageSize = 20;
+
+  /// Called after an entry is saved (the hospital programme's evaluation,
+  /// which reads the tone label only).
+  final void Function()? _onSaved;
 
   /// Firestore allows 500 writes per batch; each entry moved is 2 (copy and
   /// delete), so 200 entries per batch.
@@ -88,11 +97,16 @@ class JournalRepository {
     return entries.map(JournalSummary.fromEntry).toList(growable: false);
   }
 
-  Future<JournalModel> createEntry(JournalModel entry) {
-    return _service.createEntry(entry);
+  Future<JournalModel> createEntry(JournalModel entry) async {
+    final JournalModel saved = await _service.createEntry(entry);
+    _onSaved?.call();
+    return saved;
   }
 
-  Future<void> updateEntry(JournalModel entry) => _service.updateEntry(entry);
+  Future<void> updateEntry(JournalModel entry) async {
+    await _service.updateEntry(entry);
+    _onSaved?.call();
+  }
 
   Future<void> deleteEntry(String id) => _service.deleteEntry(id);
 
