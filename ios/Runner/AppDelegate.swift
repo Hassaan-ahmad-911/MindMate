@@ -1,5 +1,7 @@
 import Flutter
 import UIKit
+import UserNotifications
+import flutter_local_notifications
 
 @main
 @objc class AppDelegate: FlutterAppDelegate {
@@ -7,6 +9,13 @@ import UIKit
     _ application: UIApplication,
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
   ) -> Bool {
+    // Gentle reminders: lets the plugin work when a reminder is tapped while
+    // the app is closed, and shows reminders while the app is open.
+    FlutterLocalNotificationsPlugin.setPluginRegistrantCallback { registry in
+      GeneratedPluginRegistrant.register(with: registry)
+    }
+    UNUserNotificationCenter.current().delegate = self as? UNUserNotificationCenterDelegate
+
     GeneratedPluginRegistrant.register(with: self)
 
     // Opens the phone's own share sheet with a short text (used by the

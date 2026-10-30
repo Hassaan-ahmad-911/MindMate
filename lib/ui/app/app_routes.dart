@@ -19,6 +19,12 @@ class AppRoutes {
   /// "Someone will reach out": shown once per wellbeing alert.
   static const String wellbeingAlert = '/wellbeing-alert';
   static const String settingsHospital = '/settings/hospital';
+
+  /// "Gentle reminders": asks for notification permission (once).
+  static const String remindersPermission = '/reminders/permission';
+
+  /// "Today", from the Home bell.
+  static const String today = '/today';
   static const String profileWork = '/profile-setup/work';
   static const String checkInIntro = '/check-in';
   static const String checkInQuestion = '/check-in/question';

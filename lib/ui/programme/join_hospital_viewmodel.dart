@@ -11,6 +11,7 @@ import '../../services/email_code_service.dart';
 import '../app/app_routes.dart';
 import '../app/post_auth_routing.dart';
 import '../app/user_session.dart';
+import '../reminders/reminder_controller.dart';
 import 'wellbeing_programme_controller.dart';
 
 /// "Join your hospital": the code, the agreement, and the call that links
@@ -93,6 +94,8 @@ class JoinHospitalViewModel extends GetxController {
           officerRole: hospital.officerRole,
         ),
       );
+      // The hospital's check-ins now have reminders.
+      notifyRemindersChanged();
       // The blue hospital card, briefly, then on to the setup or Home.
       await Future<void>.delayed(cardDuration);
       _navigate(await _nextRoute());

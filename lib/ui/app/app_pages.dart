@@ -14,6 +14,11 @@ import '../programme/wellbeing_alert_view.dart';
 import '../programme/wellbeing_programme_controller.dart';
 import '../programme/your_hospital_view.dart';
 import '../programme/your_hospital_viewmodel.dart';
+import '../reminders/reminder_controller.dart';
+import '../reminders/reminder_permission_view.dart';
+import '../reminders/reminder_permission_viewmodel.dart';
+import '../reminders/today_view.dart';
+import '../reminders/today_viewmodel.dart';
 import '../../services/keep_awake_service.dart';
 import '../../services/meditation_audio_service.dart';
 import '../../services/meditation_voice_service.dart';
@@ -222,6 +227,26 @@ class AppPages {
             programme: Get.find<WellbeingProgrammeController>(),
           ),
         );
+      }),
+    ),
+    // Gentle reminders: the permission page and Today (the Home bell).
+    GetPage(
+      name: AppRoutes.remindersPermission,
+      page: () => const ReminderPermissionView(),
+      binding: BindingsBuilder(() {
+        Get.put<ReminderPermissionViewModel>(
+          ReminderPermissionViewModel(
+            Get.find<ReminderController>(),
+            fromHome: Get.arguments == ReminderController.fromHome,
+          ),
+        );
+      }),
+    ),
+    GetPage(
+      name: AppRoutes.today,
+      page: () => const TodayView(),
+      binding: BindingsBuilder(() {
+        Get.put<TodayViewModel>(TodayViewModel(Get.find<ReminderController>()));
       }),
     ),
     GetPage(

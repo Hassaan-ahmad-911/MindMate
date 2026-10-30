@@ -7,6 +7,7 @@ import '../../Data/repositories/settings_repository.dart';
 import '../../services/account_data_service.dart';
 import '../../services/theme_controller.dart';
 import '../programme/wellbeing_programme_controller.dart';
+import '../reminders/reminder_controller.dart';
 import 'settings_viewmodel.dart';
 
 /// The Settings tab and every settings route share one [SettingsViewModel],
@@ -34,6 +35,7 @@ class SettingsBinding extends Bindings {
         account: Get.find<AccountRepository>(),
         theme: _find<ThemeController>(),
         programme: _find<WellbeingProgrammeController>(),
+        reminders: _find<ReminderController>(),
       ),
       fenix: true,
     );

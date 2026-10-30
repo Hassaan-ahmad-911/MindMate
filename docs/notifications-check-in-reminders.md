@@ -1,6 +1,6 @@
 # Notifications: check-in reminders
 
-For the Notifications build. Users in a hospital wellbeing programme have
+Built in the Notifications module (`lib/ui/reminders/`). Users in a hospital wellbeing programme have
 check-ins that fall due on a schedule; the Notifications module turns those
 due dates into gentle local reminders. Nothing here is sent to a server and
 nothing is written to Firestore.
@@ -29,22 +29,22 @@ All dates are local calendar days.
 
 ## What each reminder says
 
-No questionnaire names (PHQ-9, GAD-7, ...), no scores, no ranges, never
-"you seem low". One reminder per day at most for check-ins: if several are
-due on the same day, use the combined line.
+Built in `lib/Models/reminder_plan.dart` (`ReminderPlanner`, `ReminderWording`),
+tested in `test/reminder_planner_test.dart`. No questionnaire names, scores or
+health words; no "!".
 
-| Due | Reminder text |
-|---|---|
-| 3-day check (PHQ-4) | Your 3-day check is ready |
-| Wellbeing (WHO-5) | A short wellbeing check is ready |
-| Low mood and worry (PHQ-9 + GAD-7) | Two short check-ins are ready when you have a few minutes |
-| Burnout and stress (CBI + PSS-10) | Your monthly check-in is ready |
-| Only one of a pair | A short check-in is ready |
-| More than one of the above on one day | You have {n} check-ins ready today |
-| Mood (existing mood reminder) | How are you feeling today? |
+| Due | Title | Body |
+|---|---|---|
+| Programme: 3-day check only | Your 3-day check is ready | 4 questions, about 30 seconds. |
+| Programme: wellbeing check only | A short wellbeing check is ready | 5 questions, about a minute. |
+| Programme: any other, or several | Your check-in is ready | A few minutes, whenever suits you. |
+| Not in a programme | A short check-in is ready | A few minutes, whenever suits you. |
 
-Tapping a reminder opens Home, where "Today's check-ins" lists them with
-"Start".
+Programme reminders come on the due day and once more the next day;
+outside a programme, on the retake day and once more 7 days later. Several on
+one day are one reminder, at the mood time (19:00 when the mood reminder is
+off). The single 3-day or wellbeing check opens that check-in; the rest open
+the Today page (programme) or the check-ins hub.
 
 ## Settings that apply
 
@@ -57,7 +57,7 @@ The same rules as the other reminders, from `users/{uid}.settings`
 - **Quiet hours:** never inside `quietHours`; a reminder that would land
   there is skipped (not moved into the night).
 - **Hide reminder text** (`hideReminderText`): when on, every reminder shows
-  only a neutral line such as "MindMate has a reminder for you", never the
+  "MindMate" and "You have a gentle reminder.", never the
   text above.
-- Inexact alarms, merged with other reminders within 60 minutes, and a
-  rolling 14-day plan, as designed for the Notifications module.
+- Inexact alarms, merged with other reminders less than 60 minutes apart,
+  and a rolling 14-day plan of at most 60 reminders.

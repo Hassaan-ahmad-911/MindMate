@@ -11,11 +11,13 @@ import '../../Models/meditation_audio.dart';
 import '../../Models/theme_preferences.dart';
 import '../../Models/user_profile.dart';
 import '../../Models/user_settings.dart';
+import '../../services/reminder_scheduler.dart';
 import '../../services/theme_controller.dart';
 import '../app/app_info.dart';
 import '../app/app_routes.dart';
 import '../app/user_session.dart';
 import '../programme/wellbeing_programme_controller.dart';
+import '../reminders/reminder_controller.dart';
 import '../shared/app_feedback.dart';
 
 /// Settings: the tab, its sub-screens (Reminders, Theme, Privacy) and the
@@ -29,6 +31,7 @@ class SettingsViewModel extends GetxController {
     AccountRepository? account,
     ThemeController? theme,
     WellbeingProgrammeController? programme,
+    ReminderController? reminders,
     this.cleanupDelay = const Duration(milliseconds: 700),
     void Function()? goToWelcome,
   }) : _settingsRepository = settings,
@@ -36,6 +39,7 @@ class SettingsViewModel extends GetxController {
        _account = account,
        _theme = theme,
        _programme = programme,
+       _reminders = reminders,
        _goToWelcome = goToWelcome ?? _openWelcome;
 
   final AuthRepository _authRepository;
@@ -44,6 +48,7 @@ class SettingsViewModel extends GetxController {
   final AccountRepository? _account;
   final ThemeController? _theme;
   final WellbeingProgrammeController? _programme;
+  final ReminderController? _reminders;
 
   /// How long to wait, after moving to Welcome, before the old screens'
   /// ViewModels are removed, so they are not taken away while their screens
@@ -99,6 +104,48 @@ class SettingsViewModel extends GetxController {
 
   /// The user's hospital, or null for someone not in one (no row).
   HospitalMembership? get hospital => _programme?.membership.value;
+
+  // Reminders page: what the phone allows and what comes next.
+
+  /// Null while unknown (or without the reminders, in tests).
+  ReminderPermission? get reminderPermission => _reminders?.permission.value;
+
+  bool get remindersBlocked => reminderPermission == ReminderPermission.blocked;
+
+  bool get remindersNotAsked =>
+      reminderPermission == ReminderPermission.notAsked;
+
+  /// "Today 20:00 · Mood check-in", or null when nothing is planned.
+  String? get nextReminderLine => _reminders?.nextLine;
+
+  /// When the Reminders page opens: the permission may have changed.
+  void refreshReminders() {
+    final ReminderController? reminders = _reminders;
+    if (reminders != null) {
+      unawaited(reminders.refreshPermission());
+      reminders.rebuild();
+    }
+  }
+
+  Future<void> turnOnReminders() async {
+    await _reminders?.requestPermission();
+  }
+
+  Future<void> openPhoneSettings() async {
+    await _reminders?.openPhoneSettings();
+  }
+
+  /// "Send a test reminder": shown at once; when the phone blocks or was
+  /// never asked, the card's own action instead.
+  Future<void> sendTestReminder() async {
+    if (remindersBlocked) {
+      await openPhoneSettings();
+    } else if (remindersNotAsked) {
+      await turnOnReminders();
+    } else {
+      await _reminders?.sendTest();
+    }
+  }
 
   /// "Nurse · Medical ward", or just the role.
   String get profileLine {

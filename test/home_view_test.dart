@@ -128,6 +128,7 @@ Future<HomeSetup> open(
           AppRoutes.checkInIntro,
           AppRoutes.reports,
           AppRoutes.emotionCheck,
+          AppRoutes.today,
         ])
           placeholder(route),
       ],
@@ -450,15 +451,13 @@ void main() {
       semantics.dispose();
     });
 
-    testWidgets('the bell opens a calm empty list', (
-      WidgetTester tester,
-    ) async {
+    testWidgets('the bell opens Today', (WidgetTester tester) async {
       await open(tester);
 
       await tester.tap(find.byIcon(Icons.notifications_none_rounded));
       await go(tester);
 
-      expect(find.text('You are all caught up.'), findsOneWidget);
+      expect(find.text('PAGE ${AppRoutes.today}'), findsOneWidget);
     });
   });
 

@@ -15,6 +15,7 @@ import '../../Models/profile_options.dart';
 import '../../Models/user_profile.dart';
 import '../../viewmodels/home_viewmodel.dart';
 import '../app/app_routes.dart';
+import '../reminders/reminder_controller.dart';
 import '../shared/app_feedback.dart';
 
 /// One of the three suggested starting points on the All set screen.
@@ -290,5 +291,13 @@ class CheckInViewModel extends GetxController {
     }
   }
 
-  void goHome() => Get.offAllNamed(AppRoutes.home);
+  /// After "All set": the "Gentle reminders" page the first time, then
+  /// Home.
+  Future<void> goHome() async {
+    bool askFirst = false;
+    if (Get.isRegistered<ReminderController>()) {
+      askFirst = !await Get.find<ReminderController>().permissionPageShown();
+    }
+    Get.offAllNamed(askFirst ? AppRoutes.remindersPermission : AppRoutes.home);
+  }
 }

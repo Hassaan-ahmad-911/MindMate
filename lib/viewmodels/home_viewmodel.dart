@@ -20,6 +20,7 @@ import '../Models/programme_schedule.dart';
 import '../Models/user_profile.dart';
 import '../ui/app/app_routes.dart';
 import '../ui/programme/wellbeing_programme_controller.dart';
+import '../ui/reminders/reminder_controller.dart';
 import '../ui/shared/app_feedback.dart';
 
 /// How far one section of the dashboard has got. Each section loads, and
@@ -40,7 +41,9 @@ class HomeViewModel extends GetxController {
     bool Function(String route)? routeExists,
     this.bubbleDelay = const Duration(seconds: 3),
     WellbeingProgrammeController? programme,
+    ReminderController? reminders,
   }) : _clock = clock ?? DateTime.now,
+       _reminders = reminders,
        _routeExists = routeExists ?? _isRegistered,
        _programme = programme,
        _programmeLoading = programme != null;
@@ -55,6 +58,9 @@ class HomeViewModel extends GetxController {
 
   /// The hospital programme; null in tests that do not use it.
   final WellbeingProgrammeController? _programme;
+
+  /// The gentle reminders; null in tests that do not use them.
+  final ReminderController? _reminders;
 
   /// How long after the page appears the speech bubble pops in.
   final Duration bubbleDelay;
@@ -83,8 +89,8 @@ class HomeViewModel extends GetxController {
 
   final Rxn<MeditationSuggestion> suggestion = Rxn<MeditationSuggestion>();
 
-  /// Unread notifications. There is no notification source in the app yet, so
-  /// this stays at 0 and the bell has no dot.
+  /// Unread notifications from elsewhere (none yet). The bell's gold dot also
+  /// shows when Today has something ready now.
   final RxInt unreadNotifications = 0.obs;
 
   /// The speech bubble over the robot, or null for none.
@@ -113,6 +119,9 @@ class HomeViewModel extends GetxController {
     if (programme != null) {
       unawaited(programme.homeOpened());
     }
+    // Plans the reminders, opens one tapped before the app was ready, or
+    // (once) the "Gentle reminders" page.
+    unawaited(_reminders?.homeOpened());
   }
 
   // ---------------------------------------------------------------------------
@@ -288,7 +297,11 @@ class HomeViewModel extends GetxController {
     return _authRepository.currentUser?.photoURL?.trim() ?? '';
   }
 
-  bool get hasUnreadNotifications => unreadNotifications.value > 0;
+  bool get hasUnreadNotifications =>
+      unreadNotifications.value > 0 || (_reminders?.hasReadyNow ?? false);
+
+  /// The bell: "Today".
+  void openToday() => unawaited(open(AppRoutes.today));
 
   // ---------------------------------------------------------------------------
   // Mood card and stats.

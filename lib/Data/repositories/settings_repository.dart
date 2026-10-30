@@ -10,10 +10,16 @@ class SettingsRepository {
   SettingsRepository(
     this._service, {
     Future<SharedPreferences> Function()? prefs,
-  }) : _prefs = prefs ?? SharedPreferences.getInstance;
+    void Function()? onRemindersChanged,
+  }) : _prefs = prefs ?? SharedPreferences.getInstance,
+       _onRemindersChanged = onRemindersChanged;
 
   final SettingsFirestoreService _service;
   final Future<SharedPreferences> Function() _prefs;
+
+  /// Called after a change that affects the reminders (their times, days,
+  /// quiet hours, "Hide reminder text"), so they are planned again.
+  final void Function()? _onRemindersChanged;
 
   String? _uid;
   UserSettings? _cache;
@@ -97,6 +103,9 @@ class SettingsRepository {
     final UserSettings next = apply(await load());
     await _service.updateField(path, value);
     _cache = next;
+    if (path.startsWith('reminders.') || path == 'hideReminderText') {
+      _onRemindersChanged?.call();
+    }
     return next;
   }
 

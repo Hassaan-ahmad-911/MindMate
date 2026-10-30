@@ -16,7 +16,12 @@ class MeditationRepository {
     this._contentService,
     this._logService, {
     SettingsRepository? settings,
-  }) : _settings = settings;
+    void Function()? onSaved,
+  }) : _settings = settings,
+       _onSaved = onSaved;
+
+  /// Called after a practice is saved (the reminders are planned again).
+  final void Function()? _onSaved;
 
   final SettingsRepository? _settings;
 
@@ -95,8 +100,9 @@ class MeditationRepository {
 
   String newLogId() => _logService.newId();
 
-  Future<void> saveLog(MeditationLogEntry entry) {
-    return _logService.saveSession(entry);
+  Future<void> saveLog(MeditationLogEntry entry) async {
+    await _logService.saveSession(entry);
+    _onSaved?.call();
   }
 
   Future<void> updateFeelAfter(String id, int feelAfter) {

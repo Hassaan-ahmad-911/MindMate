@@ -6,12 +6,21 @@ import '../mood_tracking/widgets/mood_widgets.dart';
 import '../shared/app_card.dart';
 import '../shared/mindmate_theme.dart';
 import 'settings_viewmodel.dart';
+import 'widgets/reminders_widgets.dart';
 import 'widgets/settings_widgets.dart';
 
-/// Reminders. Every change saves at once; only the choices are stored here
-/// (the Notifications module schedules them).
-class RemindersView extends GetView<SettingsViewModel> {
+/// Reminders. Every change saves at once; the reminders are then planned
+/// again on the phone. The top card shows the next reminder, or that the
+/// phone blocks them.
+class RemindersView extends StatefulWidget {
   const RemindersView({super.key});
+
+  @override
+  State<RemindersView> createState() => _RemindersViewState();
+}
+
+class _RemindersViewState extends State<RemindersView> {
+  late final SettingsViewModel controller = Get.find<SettingsViewModel>();
 
   static const List<String> _letters = <String>[
     'M',
@@ -48,12 +57,18 @@ class RemindersView extends GetView<SettingsViewModel> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    // The phone's setting may have changed since last time.
+    controller.refreshReminders();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Obx(() {
       final UserSettings? s = controller.settings.value;
       return SettingsPage(
         title: 'Reminders',
-        subtitle: 'Gentle nudges, never more than one at a time.',
         children: s == null
             ? <Widget>[
                 controller.isLoading.value
@@ -82,6 +97,7 @@ class RemindersView extends GetView<SettingsViewModel> {
       required ReminderSlot value,
       bool hasTime = true,
     }) {
+      final String? time = value.time;
       return SettingsRow(
         icon: icon,
         style: style,
@@ -92,61 +108,107 @@ class RemindersView extends GetView<SettingsViewModel> {
           value: value.on,
           onChanged: (bool on) => controller.setReminderOn(kind, on),
         ),
-        below: hasTime && value.on && value.time != null
-            ? Align(
-                alignment: Alignment.centerLeft,
-                child: TimePill(
-                  label: title,
-                  time: value.time!,
-                  onTap: () async {
-                    final String? t = await _pickTime(context, value.time!);
-                    if (t != null) {
-                      await controller.setReminderTime(kind, t);
-                    }
-                  },
-                ),
+        below: hasTime && value.on && time != null
+            ? Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  TimePill(
+                    label: title,
+                    time: time,
+                    onTap: () async {
+                      final String? t = await _pickTime(context, time);
+                      if (t != null) {
+                        await controller.setReminderTime(kind, t);
+                      }
+                    },
+                  ),
+                  if (r.quietHours.covers(time)) const QuietHoursNote(),
+                ],
               )
             : null,
       );
     }
 
+    final bool inProgramme = controller.hospital != null;
+    final bool blocked = controller.remindersBlocked;
+    final bool notAsked = controller.remindersNotAsked;
+    final String? next = controller.nextReminderLine;
     return <Widget>[
-      SettingsGroup(
-        children: <Widget>[
-          slot(
-            kind: 'mood',
-            icon: Icons.sentiment_satisfied_alt_outlined,
-            style: TileStyle.gold,
-            title: 'Mood check-in',
-            line: 'A quick "How are you feeling?"',
-            value: r.mood,
+      if (blocked || notAsked)
+        RemindersOffCard(
+          blocked: blocked,
+          onAction: blocked
+              ? controller.openPhoneSettings
+              : controller.turnOnReminders,
+        )
+      else if (next != null)
+        NextReminderCard(line: next),
+      const SizedBox(height: 14),
+      Opacity(
+        // Still usable; the choices apply once the phone allows reminders.
+        opacity: blocked ? 0.5 : 1,
+        child: SettingsGroup(
+          children: <Widget>[
+            slot(
+              kind: 'mood',
+              icon: Icons.sentiment_satisfied_alt_outlined,
+              style: TileStyle.gold,
+              title: 'Mood check-in',
+              line: inProgramme
+                  ? 'Your hospital asks for one a day'
+                  : 'A quick "How are you feeling?"',
+              value: r.mood,
+            ),
+            slot(
+              kind: 'journal',
+              icon: Icons.menu_book_outlined,
+              style: TileStyle.lightBlue,
+              title: 'Journal prompt',
+              line: "Tonight's writing prompt",
+              value: r.journal,
+            ),
+            slot(
+              kind: 'practice',
+              icon: Icons.spa_outlined,
+              style: TileStyle.lightBlue,
+              title: 'Practice',
+              line: 'A short calm practice',
+              value: r.practice,
+            ),
+            slot(
+              kind: 'checkinsDue',
+              icon: Icons.shield_outlined,
+              style: TileStyle.blue,
+              title: 'Check-ins due',
+              line: inProgramme
+                  ? 'At your mood time when one is due'
+                  : 'When a questionnaire is due again',
+              value: r.checkinsDue,
+              hasTime: false,
+            ),
+          ],
+        ),
+      ),
+      if (r.quietHours.on)
+        Padding(
+          padding: const EdgeInsets.fromLTRB(4, 10, 4, 0),
+          child: Text(
+            'Quiet hours ${r.quietHours.start} to ${r.quietHours.end} · '
+            'Days and quiet hours are further down.',
+            style: AppFonts.label(size: 13.5, color: c.textBody),
           ),
-          slot(
-            kind: 'journal',
-            icon: Icons.menu_book_outlined,
-            style: TileStyle.lightBlue,
-            title: 'Journal prompt',
-            line: "Tonight's writing prompt",
-            value: r.journal,
-          ),
-          slot(
-            kind: 'practice',
-            icon: Icons.spa_outlined,
-            style: TileStyle.lightBlue,
-            title: 'Practice',
-            line: 'A short calm practice',
-            value: r.practice,
-          ),
-          slot(
-            kind: 'checkinsDue',
-            icon: Icons.shield_outlined,
-            style: TileStyle.blue,
-            title: 'Check-ins due',
-            line: 'When a questionnaire is due again',
-            value: r.checkinsDue,
-            hasTime: false,
-          ),
-        ],
+        ),
+      const SizedBox(height: 14),
+      AppCard(
+        radius: 22,
+        padding: const EdgeInsets.symmetric(vertical: 4),
+        child: SettingsRow(
+          icon: Icons.near_me_outlined,
+          style: TileStyle.lightBlue,
+          title: 'Send a test reminder',
+          line: 'See how reminders will look',
+          onTap: controller.sendTestReminder,
+        ),
       ),
       const Padding(
         padding: EdgeInsets.fromLTRB(4, 20, 0, 10),

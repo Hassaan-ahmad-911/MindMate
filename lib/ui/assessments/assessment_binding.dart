@@ -4,7 +4,7 @@ import '../../Data/repositories/assessment_repository.dart';
 import '../../services/assessment_content_service.dart';
 import '../../services/assessment_firestore_service.dart';
 import '../../services/share_service.dart';
-import '../programme/wellbeing_programme_controller.dart';
+import '../reminders/reminder_controller.dart';
 
 /// The check-in services and repository, shared by every check-in route and
 /// created the first time one is opened.
@@ -23,7 +23,7 @@ class AssessmentBinding extends Bindings {
       () => AssessmentRepository(
         Get.find<AssessmentFirestoreService>(),
         Get.find<AssessmentContentService>(),
-        onSaved: notifyWellbeingProgramme,
+        onSaved: notifyDataSaved,
       ),
       fenix: true,
     );

@@ -7,7 +7,12 @@ import '../services/programme_firestore_service.dart';
 import '../services/programme_local_store.dart';
 import '../services/wellbeing_programme_service.dart';
 import '../ui/assessments/assessment_binding.dart';
+import '../Data/repositories/journal_repository.dart';
+import '../Data/repositories/reminder_repository.dart';
+import '../services/reminder_scheduler.dart';
+import '../ui/journal/journal_binding.dart';
 import '../ui/programme/wellbeing_programme_controller.dart';
+import '../ui/reminders/reminder_controller.dart';
 import '../Data/repositories/break_repository.dart';
 import '../Data/repositories/gratitude_repository.dart';
 import '../Data/repositories/home_repository.dart';
@@ -59,7 +64,7 @@ class InitialBinding extends Bindings {
     Get.put<MoodRepository>(
       MoodRepository(
         Get.find<MoodFirestoreService>(),
-        onSaved: notifyWellbeingProgramme,
+        onSaved: notifyDataSaved,
       ),
       permanent: true,
     );
@@ -68,7 +73,10 @@ class InitialBinding extends Bindings {
       permanent: true,
     );
     Get.put<SettingsRepository>(
-      SettingsRepository(Get.find<SettingsFirestoreService>()),
+      SettingsRepository(
+        Get.find<SettingsFirestoreService>(),
+        onRemindersChanged: notifyRemindersChanged,
+      ),
       permanent: true,
     );
     Get.put<MeditationContentService>(
@@ -81,12 +89,13 @@ class InitialBinding extends Bindings {
         Get.find<MeditationContentService>(),
         Get.find<MeditationLogService>(),
         settings: Get.find<SettingsRepository>(),
+        onSaved: notifyDataSaved,
       ),
       permanent: true,
     );
     Get.put<BreakLogService>(BreakLogService(), permanent: true);
     Get.put<BreakRepository>(
-      BreakRepository(Get.find<BreakLogService>()),
+      BreakRepository(Get.find<BreakLogService>(), onSaved: notifyDataSaved),
       permanent: true,
     );
     Get.put<GratitudeService>(GratitudeService(), permanent: true);
@@ -111,6 +120,25 @@ class InitialBinding extends Bindings {
     );
     Get.put<WellbeingProgrammeController>(
       WellbeingProgrammeController(Get.find<WellbeingProgrammeRepository>()),
+      permanent: true,
+    );
+    // Gentle reminders: planned on the phone only, from the other modules'
+    // data. The journal's services are lazy.
+    JournalBinding().dependencies();
+    Get.put<ReminderController>(
+      ReminderController(
+        ReminderRepository(
+          auth: Get.find<AuthRepository>(),
+          settings: Get.find<SettingsRepository>(),
+          moods: Get.find<MoodRepository>(),
+          meditation: Get.find<MeditationRepository>(),
+          breaks: Get.find<BreakRepository>(),
+          assessments: Get.find<AssessmentRepository>(),
+          programme: Get.find<WellbeingProgrammeRepository>(),
+          journal: Get.find<JournalRepository>,
+        ),
+        LocalReminderScheduler(),
+      ),
       permanent: true,
     );
     // Created the first time a practice needs them.

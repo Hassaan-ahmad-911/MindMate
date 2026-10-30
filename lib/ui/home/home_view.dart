@@ -225,7 +225,7 @@ class _HomeViewState extends State<HomeView>
                   icon: Icons.notifications_none_rounded,
                   tooltip: 'Notifications',
                   showDot: _vm.hasUnreadNotifications,
-                  onPressed: _showNotifications,
+                  onPressed: _vm.openToday,
                 ),
               ),
               const SizedBox(width: 10),
@@ -259,44 +259,6 @@ class _HomeViewState extends State<HomeView>
         ],
       );
     });
-  }
-
-  void _showNotifications() {
-    showModalBottomSheet<void>(
-      context: context,
-      backgroundColor: Colors.transparent,
-      builder: (BuildContext sheetContext) {
-        final MindMateColors c = sheetContext.mm;
-        return Container(
-          decoration: BoxDecoration(
-            color: c.background,
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
-          ),
-          padding: EdgeInsets.fromLTRB(
-            24,
-            24,
-            24,
-            28 + MediaQuery.paddingOf(sheetContext).bottom,
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Text(
-                'Notifications',
-                style: AppFonts.body(
-                  size: 21,
-                  weight: FontWeight.w700,
-                  color: c.textPrimary,
-                ),
-              ),
-              const SizedBox(height: 8),
-              Text('You are all caught up.', style: AppFonts.body(size: 16)),
-            ],
-          ),
-        );
-      },
-    );
   }
 
   // ---------------------------------------------------------------------------

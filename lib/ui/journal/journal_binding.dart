@@ -4,7 +4,7 @@ import '../../Data/repositories/journal_repository.dart';
 import '../../services/journal_content_service.dart';
 import '../../services/journal_draft_store.dart';
 import '../../services/journal_firestore_service.dart';
-import '../programme/wellbeing_programme_controller.dart';
+import '../reminders/reminder_controller.dart';
 import 'journal_viewmodel.dart';
 
 /// Everything the journal needs. Used by the main navigation (the Journal
@@ -27,7 +27,7 @@ class JournalBinding extends Bindings {
         Get.find<JournalFirestoreService>(),
         Get.find<JournalContentService>(),
         Get.find<JournalDraftStore>(),
-        onSaved: notifyWellbeingProgramme,
+        onSaved: notifyDataSaved,
       ),
       fenix: true,
     );

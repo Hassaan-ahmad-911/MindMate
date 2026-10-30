@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:get/get.dart';
 
 import '../../services/meditation_audio_service.dart';
@@ -30,6 +32,9 @@ import '../mood_tracking/mood_tracking_viewmodel.dart';
 import '../programme/join_hospital_viewmodel.dart';
 import '../programme/wellbeing_programme_controller.dart';
 import '../programme/your_hospital_viewmodel.dart';
+import '../reminders/reminder_controller.dart';
+import '../reminders/reminder_permission_viewmodel.dart';
+import '../reminders/today_viewmodel.dart';
 import '../reports/checkins_writing_viewmodel.dart';
 import '../reports/reports_viewmodel.dart';
 import '../reports/share_summary_viewmodel.dart';
@@ -53,6 +58,10 @@ class UserSession {
   static void clearControllers() {
     for (final void Function() remove in _removers) {
       remove();
+    }
+    // Every reminder goes (sign out, account deleted, another sign-in).
+    if (Get.isRegistered<ReminderController>()) {
+      unawaited(Get.find<ReminderController>().signedOut());
     }
     // The hospital programme lives as long as the app; forget the user.
     if (Get.isRegistered<WellbeingProgrammeController>()) {
@@ -107,5 +116,7 @@ class UserSession {
     _remove<DeleteAccountViewModel>,
     _remove<JoinHospitalViewModel>,
     _remove<YourHospitalViewModel>,
+    _remove<TodayViewModel>,
+    _remove<ReminderPermissionViewModel>,
   ];
 }
